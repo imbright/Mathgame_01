@@ -14,14 +14,12 @@
       --text: #1d2a3a;
       --muted: #63758b;
       --primary: #4d6ef3;
-      --primary-2: #7b8eff;
       --green: #22b66d;
       --red: #ea5a55;
       --yellow: #efb94e;
       --gold: #a86d00;
       --shadow: 0 16px 36px rgba(24, 41, 72, .10);
       --white: #ffffff;
-      --progress-empty: #ffffff;
     }
 
     * { box-sizing: border-box; }
@@ -32,7 +30,6 @@
       color: var(--text);
       font-family: "Segoe UI", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
     }
-
     body { overflow-x: hidden; }
 
     .app {
@@ -67,9 +64,10 @@
       display: flex;
       align-items: center;
       gap: 14px;
+      flex-wrap: wrap;
     }
 
-    .score-pill {
+    .pill {
       min-width: 150px;
       text-align: center;
       padding: 10px 16px;
@@ -78,10 +76,17 @@
       background: #fff9ea;
       color: var(--gold);
       font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .timer-pill {
+      min-width: 110px;
+      background: #fff;
+      border-color: var(--line);
+      color: var(--text);
     }
 
     .lang-wrap { position: relative; }
-
     .lang-btn {
       min-width: 118px;
       border: 1px solid var(--line);
@@ -108,9 +113,7 @@
       display: none;
       z-index: 30;
     }
-
     .lang-menu.open { display: grid; }
-
     .lang-option {
       border: none;
       background: #fff;
@@ -118,53 +121,14 @@
       border-radius: 10px;
       padding: 10px 12px;
       cursor: pointer;
-      font-size: 0.96rem;
+      font-size: .96rem;
       color: var(--text);
       font-weight: 600;
     }
-
     .lang-option:hover { background: #f3f6ff; }
-
-    .progress-box {
-      margin: 18px 0 24px;
-      padding: 14px 16px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.72);
-      box-shadow: var(--shadow);
-    }
-
-    .progress-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      color: var(--muted);
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .dots-40 {
-      display: grid;
-      grid-template-columns: repeat(40, minmax(8px, 1fr));
-      gap: 5px;
-      align-items: center;
-    }
-
-    .dot {
-      width: 100%;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background: #fff;
-      border: 2px solid #dfe7f3;
-    }
-
-    .dot.empty { background: #fff; }
-    .dot.correct { background: var(--green); border-color: #1ea764; }
-    .dot.wrong { background: var(--red); border-color: #d74e48; }
 
     .page { display: none; }
     .page.active { display: block; animation: fade .22s ease; }
-
     @keyframes fade {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: none; }
@@ -190,7 +154,7 @@
     .title {
       margin: 0;
       font-size: clamp(2rem, 4vw, 3.2rem);
-      letter-spacing: 0.04em;
+      letter-spacing: .04em;
       font-weight: 900;
     }
 
@@ -212,13 +176,11 @@
       flex-direction: column;
       gap: 7px;
     }
-
     .field label {
       color: var(--muted);
       font-weight: 700;
       font-size: .95rem;
     }
-
     .field input, .answer, .difficulty select {
       width: 100%;
       background: #fff;
@@ -230,10 +192,9 @@
       outline: none;
       transition: border-color .18s ease, box-shadow .18s ease;
     }
-
     .field input:focus, .answer:focus, .difficulty select:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(77, 110, 243, .08);
+      box-shadow: 0 0 0 4px rgba(77,110,243,.08);
     }
 
     .game-grid {
@@ -254,10 +215,8 @@
       box-shadow: 0 12px 22px rgba(26,45,90,0.12);
       transition: transform .16s ease, filter .16s ease;
     }
-
     .game-btn:hover { transform: translateY(-2px); filter: brightness(1.04); }
     .game-btn:disabled { opacity: .5; cursor: not-allowed; }
-
     .btn-blue { background: linear-gradient(135deg, #5575ff, #7d94ff); }
     .btn-green { background: linear-gradient(135deg, #22b66d, #33d188); }
     .btn-orange { background: linear-gradient(135deg, #f39a2c, #ffbb5c); }
@@ -273,7 +232,6 @@
       flex-wrap: wrap;
       margin-bottom: 16px;
     }
-
     .header-left {
       display: flex;
       align-items: center;
@@ -289,7 +247,6 @@
       cursor: pointer;
       color: #fff;
     }
-
     .back-btn { background: linear-gradient(135deg, #eb5a5a, #ff7b7b); }
     .action-btn.btn-green { background: linear-gradient(135deg, #1caf69, #2ad97d); }
     .action-btn.btn-blue { background: linear-gradient(135deg, #5575ff, #7d94ff); }
@@ -314,7 +271,6 @@
       font-weight: 700;
       flex-wrap: wrap;
     }
-
     .difficulty select {
       min-width: 210px;
       background: #fff;
@@ -356,19 +312,17 @@
       margin-top: 16px;
       font-weight: 800;
     }
-
     .status.success { color: var(--green); }
     .status.error { color: var(--red); }
     .status.info { color: var(--primary); }
 
     .progress-mini {
       display: grid;
-      grid-template-columns: repeat(10, minmax(8px, 1fr));
-      gap: 6px;
-      margin: 14px 0 6px;
+      grid-template-columns: repeat(20, minmax(4px, 1fr));
+      gap: 4px;
+      margin: 12px 0 6px;
       align-items: center;
     }
-
     .progress-mini .dot {
       width: 100%;
       aspect-ratio: 1;
@@ -376,7 +330,6 @@
       background: #fff;
       border: 2px solid #dde6f4;
     }
-
     .progress-mini .dot.correct { background: var(--green); border-color: #1ea764; }
     .progress-mini .dot.wrong { background: var(--red); border-color: #d74e48; }
 
@@ -391,7 +344,6 @@
       border-radius: 14px;
       background: #f7f9ff;
     }
-
     .sudoku-cell {
       width: 100%;
       aspect-ratio: 1;
@@ -404,55 +356,14 @@
       color: var(--text);
       outline: none;
     }
-
     .sudoku-cell.fixed {
       background: #eef3ff;
       color: var(--muted);
     }
-
     .sudoku-cell:nth-child(3n) { margin-right: 2px; }
     .sudoku-cell:nth-child(n + 19):nth-child(-n + 27),
     .sudoku-cell:nth-child(n + 46):nth-child(-n + 54) {
       border-bottom: 2px solid #cfe0f2;
-    }
-
-    .multi-list {
-      display: grid;
-      gap: 12px;
-      margin: 18px 0;
-    }
-
-    .player-row {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px 14px;
-      background: #fff;
-    }
-
-    .player-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .mini-bar {
-      height: 10px;
-      background: #edf0f6;
-      border-radius: 999px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .mini-fill {
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 0%;
-      background: linear-gradient(90deg, var(--primary), #3bc9a8);
-      border-radius: inherit;
-      transition: width .2s ease;
     }
 
     .leaderboard {
@@ -462,10 +373,8 @@
       background: #f8faff;
       border: 1px solid var(--line);
     }
-
     .leaderboard h3 { margin: 0 0 8px; }
     .leaderboard-list { display: grid; gap: 7px; }
-
     .hidden { display: none !important; }
 
     @media (max-width: 700px) {
@@ -473,7 +382,6 @@
       .topbar { padding: 12px 14px; }
       .game-grid { grid-template-columns: 1fr 1fr; }
       .card { padding: 18px; }
-      .dots-40 { gap: 4px; }
     }
   </style>
 </head>
@@ -482,7 +390,8 @@
     <header class="topbar">
       <div class="brand" data-i18n="brand">数学乐园</div>
       <div class="top-actions">
-        <div class="score-pill"><span data-i18n="totalScore">总积分</span>: <strong id="topScore">0</strong></div>
+        <div class="pill"><span data-i18n="totalScore">总积分</span>: <strong id="topScore">0</strong></div>
+        <div class="pill timer-pill"><span id="topTimer">40s</span></div>
         <div class="lang-wrap">
           <button class="lang-btn" id="langBtn" type="button" aria-expanded="false">
             <span data-i18n="language">语言</span> ▾
@@ -492,19 +401,11 @@
       </div>
     </header>
 
-    <div class="progress-box">
-      <div class="progress-head">
-        <span data-i18n="progressLabel">进度</span>
-        <span id="globalProgressText">0 / 40</span>
-      </div>
-      <div class="dots-40" id="globalDots"></div>
-    </div>
-
     <main>
       <section class="page active" id="homePage">
         <div class="home-head">
           <h1 class="title" data-i18n="homeTitle">数学益智乐园</h1>
-          <div class="score-pill"><span data-i18n="totalScore">总积分</span>: <strong id="homeScore">0</strong></div>
+          <div class="pill"><span data-i18n="totalScore">总积分</span>: <strong id="homeScore">0</strong></div>
         </div>
 
         <div class="card">
@@ -524,8 +425,7 @@
             <button class="game-btn btn-green" data-page="pageCalc" data-i18n="gameCalc">口算</button>
             <button class="game-btn btn-orange" data-page="pageWord" data-i18n="gameWord">应用题</button>
             <button class="game-btn btn-purple" data-page="pageSudoku" data-i18n="gameSudoku">数独</button>
-            <button class="game-btn btn-red" data-page="pageMulti" data-i18n="gameMulti">多人对战</button>
-            <button class="game-btn btn-gold" data-page="pageUltimate" id="ultimateBtn" data-i18n="ultimateBtn">终极测试（40分解锁）</button>
+            <button class="game-btn btn-gold" data-page="pageUltimate" id="ultimateBtn" data-i18n="ultimateBtn">终极测试</button>
           </div>
 
           <div class="leaderboard" id="leaderboardBox">
@@ -546,7 +446,6 @@
             <select id="diff24"></select>
           </div>
         </div>
-
         <div class="card">
           <div class="progress-mini" id="progress24"></div>
           <div class="question-box" id="q24">题目：--</div>
@@ -573,7 +472,6 @@
             <select id="diffCalc"></select>
           </div>
         </div>
-
         <div class="card">
           <div class="progress-mini" id="progressCalc"></div>
           <div class="question-box" id="qCalc">题目：--</div>
@@ -600,7 +498,6 @@
             <select id="diffWord"></select>
           </div>
         </div>
-
         <div class="card">
           <div class="progress-mini" id="progressWord"></div>
           <div class="question-box" id="qWord">题目：--</div>
@@ -627,7 +524,6 @@
             <select id="diffSudoku"></select>
           </div>
         </div>
-
         <div class="card">
           <div class="progress-mini" id="progressSudoku"></div>
           <div id="sudokuBoard" class="sudoku-board"></div>
@@ -638,35 +534,6 @@
           </div>
           <div class="status" id="msgSudoku"></div>
           <div class="status info" id="timerSudoku"></div>
-        </div>
-      </section>
-
-      <section class="page" id="pageMulti">
-        <div class="panel-header">
-          <div class="header-left">
-            <button class="back-btn" data-back="home" data-i18n="homeBtn">返回主页</button>
-            <div class="mini-score"><span data-i18n="multiRank">多人排行</span></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="controls">
-            <button class="action-btn btn-blue" id="addBotBtn" data-i18n="addBotBtn">添加 Bot</button>
-            <button class="action-btn btn-red" id="clearPlayersBtn" data-i18n="clearBtn">清空</button>
-            <button class="action-btn btn-green" id="startMultiBtn" data-i18n="startBtn">开始</button>
-          </div>
-
-          <div class="multi-list" id="multiPlayers"></div>
-          <div class="progress-mini" id="progressMulti"></div>
-          <div class="question-box" id="multiQuestion">题目：--</div>
-          <input class="answer-input" id="multiAns" type="number" placeholder="输入答案" />
-          <div class="controls">
-            <button class="action-btn btn-green" id="submitMultiBtn" data-i18n="submitBtn">提交答案</button>
-            <button class="soft-btn" id="retryMultiBtn" data-i18n="retryBtn">错题重做</button>
-          </div>
-          <div class="status" id="msgMulti"></div>
-          <div class="status info" id="timerMulti"></div>
-          <div class="leaderboard hidden" id="rankBox"></div>
         </div>
       </section>
 
@@ -681,7 +548,6 @@
             <select id="diffUltimate"></select>
           </div>
         </div>
-
         <div class="card">
           <div class="progress-mini" id="progressUltimate"></div>
           <div class="question-box" id="qUltimate">题目：--</div>
@@ -700,359 +566,114 @@
   </div>
 
   <script>
-    const SAVE_KEY = 'mathgame_park_v1';
-    const UNLOCK_TOTAL = 40;
+    const SAVE_KEY = 'mathgame_park_v3';
     const LANGS = { zh: '中文', en: 'English', es: 'Español', ja: '日本語', ko: '한국어', fr: 'Français' };
-
     const T = {
       zh: {
-        brand: '数学乐园',
-        language: '语言',
-        totalScore: '总积分',
-        progressLabel: '进度',
-        homeTitle: '数学益智乐园',
-        playerName: '玩家名字',
-        playerId: '玩家 ID',
-        game24: '24 点',
-        gameCalc: '口算',
-        gameWord: '应用题',
-        gameSudoku: '数独',
-        gameMulti: '多人对战',
-        ultimateBtn: '终极测试（40分解锁）',
-        homeBtn: '返回主页',
-        singleScore: '单项积分',
-        difficulty: '难度',
-        submitBtn: '提交答案',
-        nextBtn: '下一题',
-        showAnswerBtn: '查看答案',
-        checkBtn: '检查答案',
-        newSudokuBtn: '新数独',
-        addBotBtn: '添加 Bot',
-        clearBtn: '清空',
-        startBtn: '开始',
-        retryBtn: '错题重做',
-        rankTitle: '排行榜',
-        multiRank: '多人排行',
-        ultimateScore: '终极测试',
-        correct: '答对！',
-        wrong: '答案错误，再试一次。',
-        invalid: '请输入有效答案。',
-        need40: '总积分达到 40 分后方可开启终极测试。',
-        timeUp: '时间到，判定失败。',
-        invalid24: '算式必须使用题目中的四个数字，且结果为 24。',
-        invalidFormula: '算式格式无效。',
-        answerIs: '答案是：',
-        noRetry: '当前没有错题可重做。',
-        retryQueue: '已加入错题重做队列。',
-        sudokuRule: '每行、每列、每个 3×3 宫必须是 1~9 且不重复。',
-        sudokuIncomplete: '请先把空格填完整。',
-        sudokuWrong: '数独还不正确。',
-        sudokuCorrect: '数独正确！',
-        noPlayers: '请先添加玩家。',
-        finalRank: '最终排名',
-        bot: 'Bot',
-        score: '分数',
-        you: '你',
-        rank: '排名',
-        easy: '简单 (+3)',
-        normal: '中等 (+6)',
-        hard: '困难 (+10)',
-        devil: '极限 (+18)'
+        brand: '数学乐园', language: '语言', totalScore: '总积分', homeTitle: '数学益智乐园',
+        playerName: '玩家名字', playerId: '玩家 ID', game24: '24 点', gameCalc: '口算', gameWord: '应用题',
+        gameSudoku: '数独', ultimateBtn: '终极测试', homeBtn: '返回主页', singleScore: '单项积分',
+        difficulty: '难度', submitBtn: '提交答案', nextBtn: '下一题', showAnswerBtn: '查看答案',
+        checkBtn: '检查答案', newSudokuBtn: '新数独', retryBtn: '错题重做', rankTitle: '排行榜',
+        multiRank: '排行', ultimateScore: '终极测试', correct: '答对！', wrong: '答案错误，再试一次。',
+        invalid: '请输入有效答案。', need40: '总积分达到 40 分后方可开启终极测试。', timeUp: '时间到！',
+        invalid24: '组合必须使用四个数并得到 24。', invalidFormula: '算式无效。', answerIs: '答案是：',
+        noRetry: '当前没有错题可重做。', retryQueue: '已加入错题重做队列。', sudokuRule: '每行、每列、每个 3×3 宫必须是 1~9 且不重复。',
+        sudokuIncomplete: '请先把空格填完整。', sudokuWrong: '数独还不正确。', sudokuCorrect: '数独正确！',
+        noPlayers: '请先添加玩家。', finalRank: '最终排名', bot: 'Bot', score: '分数', you: '你', rank: '排名',
+        easy: '简单 (+3)', normal: '中等 (+6)', hard: '困难 (+10)', devil: '极限 (+18)'
       },
       en: {
-        brand: 'Math Puzzle Park',
-        language: 'Language',
-        totalScore: 'Total Score',
-        progressLabel: 'Progress',
-        homeTitle: 'Math Puzzle Park',
-        playerName: 'Player Name',
-        playerId: 'Player ID',
-        game24: '24 Game',
-        gameCalc: 'Mental Math',
-        gameWord: 'Word Problems',
-        gameSudoku: 'Sudoku',
-        gameMulti: 'Multiplayer',
-        ultimateBtn: 'Ultimate Test (40 unlock)',
-        homeBtn: 'Home',
-        singleScore: 'Single Score',
-        difficulty: 'Difficulty',
-        submitBtn: 'Submit',
-        nextBtn: 'Next',
-        showAnswerBtn: 'Show Answer',
-        checkBtn: 'Check',
-        newSudokuBtn: 'New Sudoku',
-        addBotBtn: 'Add Bot',
-        clearBtn: 'Clear',
-        startBtn: 'Start',
-        retryBtn: 'Retry Mistakes',
-        rankTitle: 'Leaderboard',
-        multiRank: 'Rank',
-        ultimateScore: 'Ultimate',
-        correct: 'Correct!',
-        wrong: 'Wrong answer. Try again.',
-        invalid: 'Please enter a valid answer.',
-        need40: 'Reach 40 total points to unlock the ultimate test.',
-        timeUp: 'Time is up.',
-        invalid24: 'Use the four numbers exactly once and reach 24.',
-        invalidFormula: 'Invalid formula.',
-        answerIs: 'Answer: ',
-        noRetry: 'No retry questions right now.',
-        retryQueue: 'Added to retry queue.',
-        sudokuRule: 'Each row, column, and 3×3 box must contain 1–9 without repetition.',
-        sudokuIncomplete: 'Fill all blanks first.',
-        sudokuWrong: 'Sudoku is not correct yet.',
-        sudokuCorrect: 'Sudoku correct!',
-        noPlayers: 'Add players first.',
-        finalRank: 'Final Ranking',
-        bot: 'Bot',
-        score: 'Score',
-        you: 'You',
-        rank: 'Rank',
-        easy: 'Easy (+3)',
-        normal: 'Normal (+6)',
-        hard: 'Hard (+10)',
-        devil: 'Extreme (+18)'
+        brand: 'Math Puzzle Park', language: 'Language', totalScore: 'Total Score', homeTitle: 'Math Puzzle Park',
+        playerName: 'Player Name', playerId: 'Player ID', game24: '24 Game', gameCalc: 'Mental Math', gameWord: 'Word Problems',
+        gameSudoku: 'Sudoku', ultimateBtn: 'Ultimate Test', homeBtn: 'Home', singleScore: 'Score', difficulty: 'Difficulty',
+        submitBtn: 'Submit', nextBtn: 'Next', showAnswerBtn: 'Show Answer', checkBtn: 'Check', newSudokuBtn: 'New Sudoku',
+        retryBtn: 'Retry Mistakes', rankTitle: 'Leaderboard', multiRank: 'Rank', ultimateScore: 'Ultimate', correct: 'Correct!',
+        wrong: 'Wrong answer. Try again.', invalid: 'Please enter a valid answer.', need40: 'Reach 40 total points to unlock the ultimate test.',
+        timeUp: 'Time is up!', invalid24: 'Use the four numbers exactly once and reach 24.', invalidFormula: 'Invalid formula.',
+        answerIs: 'Answer: ', noRetry: 'No retry questions right now.', retryQueue: 'Added to retry queue.',
+        sudokuRule: 'Each row, column, and 3×3 box must contain 1–9 without repetition.', sudokuIncomplete: 'Fill all blanks first.',
+        sudokuWrong: 'Sudoku is not correct yet.', sudokuCorrect: 'Sudoku correct!', noPlayers: 'Add players first.',
+        finalRank: 'Final Ranking', bot: 'Bot', score: 'Score', you: 'You', rank: 'Rank', easy: 'Easy (+3)',
+        normal: 'Normal (+6)', hard: 'Hard (+10)', devil: 'Extreme (+18)'
       },
       es: {
-        brand: 'Parque de Matemáticas',
-        language: 'Idioma',
-        totalScore: 'Puntuación Total',
-        progressLabel: 'Progreso',
-        homeTitle: 'Parque de Matemáticas',
-        playerName: 'Nombre del jugador',
-        playerId: 'ID del jugador',
-        game24: 'Juego 24',
-        gameCalc: 'Cálculo mental',
-        gameWord: 'Problemas',
-        gameSudoku: 'Sudoku',
-        gameMulti: 'Multijugador',
-        ultimateBtn: 'Prueba final (40 desbloquea)',
-        homeBtn: 'Inicio',
-        singleScore: 'Puntuación',
-        difficulty: 'Dificultad',
-        submitBtn: 'Enviar',
-        nextBtn: 'Siguiente',
-        showAnswerBtn: 'Mostrar respuesta',
-        checkBtn: 'Comprobar',
-        newSudokuBtn: 'Nuevo Sudoku',
-        addBotBtn: 'Añadir bot',
-        clearBtn: 'Limpiar',
-        startBtn: 'Iniciar',
-        retryBtn: 'Reintentar fallos',
-        rankTitle: 'Clasificación',
-        multiRank: 'Clasificación',
-        ultimateScore: 'Final',
-        correct: '¡Correcto!',
-        wrong: 'Respuesta incorrecta.',
-        invalid: 'Introduce una respuesta válida.',
-        need40: 'Consigue 40 puntos para desbloquear la prueba final.',
-        timeUp: 'Se acabó el tiempo.',
-        invalid24: 'Usa cada uno de los cuatro números y obtén 24.',
-        invalidFormula: 'Fórmula no válida.',
-        answerIs: 'Respuesta: ',
-        noRetry: 'No hay preguntas fallidas para repetir.',
-        retryQueue: 'Añadido a la cola de repaso.',
-        sudokuRule: 'Cada fila, columna y bloque 3×3 debe contener 1–9 sin repetir.',
-        sudokuIncomplete: 'Primero completa todas las casillas vacías.',
-        sudokuWrong: 'El Sudoku aún no es correcto.',
-        sudokuCorrect: '¡Sudoku correcto!',
-        noPlayers: 'Primero añade jugadores.',
-        finalRank: 'Clasificación final',
-        bot: 'Bot',
-        score: 'Puntuación',
-        you: 'Tú',
-        rank: 'Puesto',
-        easy: 'Fácil (+3)',
-        normal: 'Normal (+6)',
-        hard: 'Difícil (+10)',
-        devil: 'Extremo (+18)'
+        brand: 'Parque de Matemáticas', language: 'Idioma', totalScore: 'Puntuación Total', homeTitle: 'Parque de Matemáticas',
+        playerName: 'Nombre del jugador', playerId: 'ID del jugador', game24: 'Juego 24', gameCalc: 'Cálculo mental', gameWord: 'Problemas',
+        gameSudoku: 'Sudoku', ultimateBtn: 'Prueba final', homeBtn: 'Inicio', singleScore: 'Puntuación', difficulty: 'Dificultad',
+        submitBtn: 'Enviar', nextBtn: 'Siguiente', showAnswerBtn: 'Mostrar respuesta', checkBtn: 'Comprobar', newSudokuBtn: 'Nuevo Sudoku',
+        retryBtn: 'Reintentar fallos', rankTitle: 'Clasificación', multiRank: 'Ranking', ultimateScore: 'Final', correct: '¡Correcto!',
+        wrong: 'Respuesta incorrecta.', invalid: 'Introduce una respuesta válida.', need40: 'Consigue 40 puntos para desbloquear la prueba final.',
+        timeUp: '¡Se acabó el tiempo!', invalid24: 'Usa cada uno de los cuatro números y obtén 24.', invalidFormula: 'Fórmula no válida.',
+        answerIs: 'Respuesta: ', noRetry: 'No hay preguntas fallidas para repetir.', retryQueue: 'Añadido a la cola de repaso.',
+        sudokuRule: 'Cada fila, columna y bloque 3×3 debe contener 1–9 sin repetir.', sudokuIncomplete: 'Primero completa todas las casillas vacías.',
+        sudokuWrong: 'El Sudoku aún no es correcto.', sudokuCorrect: '¡Sudoku correcto!', noPlayers: 'Primero añade jugadores.',
+        finalRank: 'Clasificación final', bot: 'Bot', score: 'Puntuación', you: 'Tú', rank: 'Puesto', easy: 'Fácil (+3)',
+        normal: 'Normal (+6)', hard: 'Difícil (+10)', devil: 'Extremo (+18)'
       },
       ja: {
-        brand: '数学パズルパーク',
-        language: '言語',
-        totalScore: '合計スコア',
-        progressLabel: '進捗',
-        homeTitle: '数学パズルパーク',
-        playerName: 'プレイヤー名',
-        playerId: 'プレイヤー ID',
-        game24: '24ゲーム',
-        gameCalc: '暗算',
-        gameWord: '文章題',
-        gameSudoku: '数独',
-        gameMulti: '対戦',
-        ultimateBtn: '最終テスト（40点解放）',
-        homeBtn: 'ホーム',
-        singleScore: 'スコア',
-        difficulty: '難易度',
-        submitBtn: '回答する',
-        nextBtn: '次の問題',
-        showAnswerBtn: '答えを見る',
-        checkBtn: '確認',
-        newSudokuBtn: '新しい数独',
-        addBotBtn: 'ボット追加',
-        clearBtn: 'クリア',
-        startBtn: '開始',
-        retryBtn: '間違えた問題をやり直す',
-        rankTitle: 'ランキング',
-        multiRank: '順位',
-        ultimateScore: '最終テスト',
-        correct: '正解！',
-        wrong: '不正解です。',
-        invalid: '有効な答えを入力してください。',
-        need40: '合計40点で最終テストが解放されます。',
-        timeUp: '時間切れ。',
-        invalid24: '4つの数字を1回ずつ使って24にしてください。',
-        invalidFormula: '式が無効です。',
-        answerIs: '答え: ',
-        noRetry: 'やり直す問題がありません。',
-        retryQueue: '誤答問題を再挑戦に追加しました。',
-        sudokuRule: '各行・列・3×3ブロックに1〜9が重複なく入ります。',
-        sudokuIncomplete: '空欄をすべて埋めてください。',
-        sudokuWrong: '数独がまだ正しくありません。',
-        sudokuCorrect: '数独正解！',
-        noPlayers: 'まずプレイヤーを追加してください。',
-        finalRank: '最終順位',
-        bot: 'ボット',
-        score: 'スコア',
-        you: 'あなた',
-        rank: '順位',
-        easy: '簡単 (+3)',
-        normal: '普通 (+6)',
-        hard: '難しい (+10)',
-        devil: '極限 (+18)'
+        brand: '数学パズルパーク', language: '言語', totalScore: '合計スコア', homeTitle: '数学パズルパーク',
+        playerName: 'プレイヤー名', playerId: 'プレイヤー ID', game24: '24ゲーム', gameCalc: '暗算', gameWord: '文章題',
+        gameSudoku: '数独', ultimateBtn: '最終テスト', homeBtn: 'ホーム', singleScore: 'スコア', difficulty: '難易度',
+        submitBtn: '回答する', nextBtn: '次の問題', showAnswerBtn: '答えを見る', checkBtn: '確認', newSudokuBtn: '新しい数独',
+        retryBtn: '間違えた問題をやり直す', rankTitle: 'ランキング', multiRank: '順位', ultimateScore: '最終テスト',
+        correct: '正解！', wrong: '不正解です。', invalid: '有効な答えを入力してください。', need40: '合計40点で最終テストが解放されます。',
+        timeUp: '時間切れ。', invalid24: '4つの数字を1回ずつ使って24にしてください。', invalidFormula: '式が無効です。',
+        answerIs: '答え: ', noRetry: 'やり直す問題がありません。', retryQueue: '誤答問題を再挑戦に追加しました。',
+        sudokuRule: '各行・列・3×3ブロックに1〜9が重複なく入ります。', sudokuIncomplete: '空欄をすべて埋めてください。',
+        sudokuWrong: '数独がまだ正しくありません。', sudokuCorrect: '数独正解！', noPlayers: 'まずプレイヤーを追加してください。',
+        finalRank: '最終順位', bot: 'ボット', score: 'スコア', you: 'あなた', rank: '順位', easy: '簡単 (+3)',
+        normal: '普通 (+6)', hard: '難しい (+10)', devil: '極限 (+18)'
       },
       ko: {
-        brand: '수학 퍼즐 파크',
-        language: '언어',
-        totalScore: '총점',
-        progressLabel: '진행',
-        homeTitle: '수학 퍼즐 파크',
-        playerName: '플레이어 이름',
-        playerId: '플레이어 ID',
-        game24: '24 게임',
-        gameCalc: '암산',
-        gameWord: '응용 문제',
-        gameSudoku: '스도쿠',
-        gameMulti: '대결',
-        ultimateBtn: '최종 테스트 (40점 해제)',
-        homeBtn: '홈',
-        singleScore: '점수',
-        difficulty: '난이도',
-        submitBtn: '답 제출',
-        nextBtn: '다음',
-        showAnswerBtn: '정답 보기',
-        checkBtn: '확인',
-        newSudokuBtn: '새 스도쿠',
-        addBotBtn: '봇 추가',
-        clearBtn: '초기화',
-        startBtn: '시작',
-        retryBtn: '오답 다시 풀기',
-        rankTitle: '순위',
-        multiRank: '순위',
-        ultimateScore: '최종 테스트',
-        correct: '정답!',
-        wrong: '오답입니다.',
-        invalid: '올바른 답을 입력하세요.',
-        need40: '총점 40점 달성 시 최종 테스트가 해제됩니다.',
-        timeUp: '시간 초과.',
-        invalid24: '네 숫자를 각각 한 번씩 사용해 24를 만들세요.',
-        invalidFormula: '식이 올바르지 않습니다.',
-        answerIs: '정답: ',
-        noRetry: '다시 푸는 문제 없음.',
-        retryQueue: '오답 문제를 다시 풀 수 있게 추가했습니다.',
-        sudokuRule: '각 행, 열, 3×3칸에는 1~9가 중복 없이 들어가야 합니다.',
-        sudokuIncomplete: '빈칸을 먼저 채워 주세요.',
-        sudokuWrong: '스도쿠가 아직 틀렸습니다.',
-        sudokuCorrect: '스도쿠 정답!',
-        noPlayers: '먼저 플레이어를 추가하세요.',
-        finalRank: '최종 순위',
-        bot: '봇',
-        score: '점수',
-        you: '나',
-        rank: '순위',
-        easy: '쉬움 (+3)',
-        normal: '보통 (+6)',
-        hard: '어려움 (+10)',
-        devil: '극한 (+18)'
+        brand: '수학 퍼즐 파크', language: '언어', totalScore: '총점', homeTitle: '수학 퍼즐 파크',
+        playerName: '플레이어 이름', playerId: '플레이어 ID', game24: '24 게임', gameCalc: '암산', gameWord: '응용 문제',
+        gameSudoku: '스도쿠', ultimateBtn: '최종 테스트', homeBtn: '홈', singleScore: '점수', difficulty: '난이도',
+        submitBtn: '답 제출', nextBtn: '다음', showAnswerBtn: '정답 보기', checkBtn: '확인', newSudokuBtn: '새 스도쿠',
+        retryBtn: '오답 다시 풀기', rankTitle: '순위', multiRank: '순위', ultimateScore: '최종 테스트', correct: '정답!',
+        wrong: '오답입니다.', invalid: '올바른 답을 입력하세요.', need40: '총점 40점 달성 시 최종 테스트가 해제됩니다.',
+        timeUp: '시간 초과.', invalid24: '네 숫자를 각각 한 번씩 사용해 24를 만들세요.', invalidFormula: '식이 올바르지 않습니다.',
+        answerIs: '정답: ', noRetry: '다시 푸는 문제 없음.', retryQueue: '오답 문제를 다시 풀 수 있게 추가했습니다.',
+        sudokuRule: '각 행, 열, 3×3칸에는 1~9가 중복 없이 들어가야 합니다.', sudokuIncomplete: '빈칸을 먼저 채워 주세요.',
+        sudokuWrong: '스도쿠가 아직 틀렸습니다.', sudokuCorrect: '스도쿠 정답!', noPlayers: '먼저 플레이어를 추가하세요.',
+        finalRank: '최종 순위', bot: '봇', score: '점수', you: '나', rank: '순위', easy: '쉬움 (+3)',
+        normal: '보통 (+6)', hard: '어려움 (+10)', devil: '극한 (+18)'
       },
       fr: {
-        brand: 'Parc de mathématiques',
-        language: 'Langue',
-        totalScore: 'Score total',
-        progressLabel: 'Progression',
-        homeTitle: 'Parc de mathématiques',
-        playerName: 'Nom du joueur',
-        playerId: 'ID du joueur',
-        game24: 'Jeu du 24',
-        gameCalc: 'Calcul mental',
-        gameWord: 'Problèmes',
-        gameSudoku: 'Sudoku',
-        gameMulti: 'Multijoueur',
-        ultimateBtn: 'Test final (40 points)',
-        homeBtn: 'Accueil',
-        singleScore: 'Score',
-        difficulty: 'Difficulté',
-        submitBtn: 'Valider',
-        nextBtn: 'Suivant',
-        showAnswerBtn: 'Voir la réponse',
-        checkBtn: 'Vérifier',
-        newSudokuBtn: 'Nouveau Sudoku',
-        addBotBtn: 'Ajouter un bot',
-        clearBtn: 'Effacer',
-        startBtn: 'Commencer',
-        retryBtn: 'Rejouer les erreurs',
-        rankTitle: 'Classement',
-        multiRank: 'Classement',
-        ultimateScore: 'Final',
-        correct: 'Bonne réponse !',
-        wrong: 'Mauvaise réponse.',
-        invalid: 'Saisissez une réponse valide.',
-        need40: 'Atteignez 40 points pour débloquer le test final.',
-        timeUp: 'Temps écoulé.',
-        invalid24: 'Utilisez les quatre nombres exactement une fois et obtenez 24.',
-        invalidFormula: 'Formule invalide.',
-        answerIs: 'Réponse: ',
-        noRetry: 'Aucune erreur à refaire.',
-        retryQueue: 'Question ajoutée à la file de reprise.',
-        sudokuRule: 'Chaque ligne, colonne et bloc 3×3 doit contenir 1–9 sans répétition.',
-        sudokuIncomplete: 'Complétez d’abord toutes les cases vides.',
-        sudokuWrong: 'Le Sudoku n’est pas encore correct.',
-        sudokuCorrect: 'Sudoku correct !',
-        noPlayers: 'Ajoutez d’abord des joueurs.',
-        finalRank: 'Classement final',
-        bot: 'Bot',
-        score: 'Score',
-        you: 'Vous',
-        rank: 'Rang',
-        easy: 'Facile (+3)',
-        normal: 'Moyen (+6)',
-        hard: 'Difficile (+10)',
-        devil: 'Extrême (+18)'
+        brand: 'Parc de mathématiques', language: 'Langue', totalScore: 'Score total', homeTitle: 'Parc de mathématiques',
+        playerName: 'Nom du joueur', playerId: 'ID du joueur', game24: 'Jeu du 24', gameCalc: 'Calcul mental', gameWord: 'Problèmes',
+        gameSudoku: 'Sudoku', ultimateBtn: 'Test final', homeBtn: 'Accueil', singleScore: 'Score', difficulty: 'Difficulté',
+        submitBtn: 'Valider', nextBtn: 'Suivant', showAnswerBtn: 'Voir la réponse', checkBtn: 'Vérifier', newSudokuBtn: 'Nouveau Sudoku',
+        retryBtn: 'Rejouer les erreurs', rankTitle: 'Classement', multiRank: 'Classement', ultimateScore: 'Final', correct: 'Bonne réponse !',
+        wrong: 'Réponse incorrecte.', invalid: 'Saisissez une réponse valide.', need40: 'Atteignez 40 points pour débloquer le test final.',
+        timeUp: 'Temps écoulé !', invalid24: 'Utilisez les quatre nombres exactement une fois pour obtenir 24.', invalidFormula: 'Formule invalide.',
+        answerIs: 'Réponse : ', noRetry: 'Aucune question à recommencer.', retryQueue: 'Question ajoutée à la file de reprise.',
+        sudokuRule: 'Chaque ligne, colonne et bloc 3×3 doit contenir 1–9 sans répétition.', sudokuIncomplete: 'Complétez d’abord toutes les cases.',
+        sudokuWrong: 'Le Sudoku n’est pas correct.', sudokuCorrect: 'Sudoku correct !', noPlayers: 'Ajoutez d’abord des joueurs.',
+        finalRank: 'Classement final', bot: 'Bot', score: 'Score', you: 'Vous', rank: 'Classement', easy: 'Facile (+3)',
+        normal: 'Moyen (+6)', hard: 'Difficile (+10)', devil: 'Extrême (+18)'
       }
     };
 
     const state = {
       lang: 'zh',
       totalScore: 0,
-      scores: { game24: 0, calc: 0, word: 0, sudoku: 0, multi: 0, ultimate: 0 },
+      scores: { page24: 0, calc: 0, word: 0, sudoku: 0, ultimate: 0 },
       playerName: '',
       playerId: '',
       page: 'homePage',
-      players: [{ name: '你', score: 0, progress: 0, bot: false }],
-      multiRunning: false,
-      multiQuestions: [],
-      multiIndex: 0,
-      leaderboard: [],
-      retryQueue: [],
-      progress: { game24: [], calc: [], word: [], sudoku: [], multi: [], ultimate: [] },
-      questions: { game24: null, calc: null, word: null, sudoku: null, multi: null, ultimate: null },
-      timers: {},
-      last: {}
+      progress: { page24: [], calc: [], word: [], sudoku: [], ultimate: [] },
+      questions: { page24: null, calc: null, word: null, sudoku: null, ultimate: null },
+      timerId: null,
+      topTimer: 40,
+      currentTimerKey: null
     };
 
-    const $ = (id) => document.getElementById(id);
+    const $ = id => document.getElementById(id);
 
-    const tr = (key) => (T[state.lang] && T[state.lang][key]) || T.zh[key] || key;
+    function tr(key) {
+      return (T[state.lang] && T[state.lang][key]) || key;
+    }
 
     function saveState() {
       try {
@@ -1061,818 +682,42 @@
           totalScore: state.totalScore,
           scores: state.scores,
           playerName: state.playerName,
-          playerId: state.playerId,
-          leaderboard: state.leaderboard
+          playerId: state.playerId
         }));
-      } catch (e) {
-        console.warn('save failed', e);
-      }
+      } catch (e) {}
     }
 
     function loadState() {
       try {
         const raw = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
-        if (!raw) return;
-        state.lang = LANGS[raw.lang] ? raw.lang : 'zh';
+        if (raw.lang && T[raw.lang]) state.lang = raw.lang;
         state.totalScore = Number(raw.totalScore || 0);
         state.scores = { ...state.scores, ...(raw.scores || {}) };
         state.playerName = raw.playerName || '';
         state.playerId = raw.playerId || '';
-        state.leaderboard = Array.isArray(raw.leaderboard) ? raw.leaderboard : [];
-      } catch (e) {
-        console.warn('load failed', e);
-      }
+      } catch (e) {}
     }
 
-    function setStatus(id, text = '', kind = '') {
+    function setStatus(id, text, kind = '') {
       const el = $(id);
       if (!el) return;
       el.textContent = text;
       el.className = 'status' + (kind ? ' ' + kind : '');
     }
 
-    function updateScores() {
-      $('topScore').textContent = state.totalScore;
-      $('homeScore').textContent = state.totalScore;
-      const map = { score24: 'game24', scoreCalc: 'calc', scoreWord: 'word', scoreSudoku: 'sudoku', scoreUltimate: 'ultimate' };
-      Object.entries(map).forEach(([id, key]) => {
-        const e = $(id);
-        if (e) e.textContent = state.scores[key] || 0;
-      });
-      const ultimateBtn = $('ultimateBtn');
-      if (ultimateBtn) {
-        ultimateBtn.disabled = state.totalScore < UNLOCK_TOTAL;
-        ultimateBtn.style.opacity = state.totalScore < UNLOCK_TOTAL ? '.5' : '1';
-      }
-    }
-
-    function renderLeaderboard() {
-      const list = $('leaderboardList');
-      if (!list) return;
-      list.innerHTML = '';
-      const entries = state.leaderboard.length ? state.leaderboard : [
-        { name: 'Player 1', score: 0 },
-        { name: 'Player 2', score: 0 },
-        { name: 'Player 3', score: 0 }
-      ];
-      entries.slice(0, 5).forEach((entry, index) => {
-        const row = document.createElement('div');
-        row.textContent = `${index + 1}. ${entry.name} - ${entry.score}`;
-        list.appendChild(row);
-      });
-    }
-
-    function addLeaderboardEntry(name, score) {
-      state.leaderboard = [...state.leaderboard, { name, score }]
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 5);
-      saveState();
-      renderLeaderboard();
-    }
-
-    function updateGlobalProgress() {
-      const ids = ['game24', 'calc', 'word', 'sudoku', 'multi', 'ultimate'];
-      const all = [];
-      ids.forEach((key) => {
-        const arr = state.progress[key] || [];
-        const correctCount = arr.filter(v => v === 'correct').length;
-        const text = `${correctCount} / ${arr.length || 10}`;
-        if (key === 'game24') {
-          const box = $('progress24');
-          renderMiniDots(box, arr, 10);
-        }
-        if (key === 'calc') renderMiniDots($('progressCalc'), state.progress.calc, 10);
-        if (key === 'word') renderMiniDots($('progressWord'), state.progress.word, 10);
-        if (key === 'sudoku') renderMiniDots($('progressSudoku'), state.progress.sudoku, 10);
-        if (key === 'multi') renderMiniDots($('progressMulti'), state.progress.multi, 10);
-        if (key === 'ultimate') renderMiniDots($('progressUltimate'), state.progress.ultimate, 10);
-        all.push(...arr);
-      });
-      const totalCorrect = all.filter(v => v === 'correct').length;
-      const box = $('globalDots');
-      if (box) {
-        box.innerHTML = '';
-        for (let i = 0; i < 40; i++) {
-          const dot = document.createElement('div');
-          dot.className = 'dot ' + (i < totalCorrect ? 'correct' : 'empty');
-          box.appendChild(dot);
-        }
-      }
-      $('globalProgressText').textContent = `${totalCorrect} / 40`;
-    }
-
-    function renderMiniDots(container, arr, count = 10) {
-      if (!container) return;
-      const values = Array.isArray(arr) ? arr.slice() : [];
-      while (values.length < count) values.push('empty');
-      container.innerHTML = '';
-      values.slice(0, count).forEach((v) => {
-        const d = document.createElement('div');
-        d.className = 'dot ' + (v === 'correct' ? 'correct' : v === 'wrong' ? 'wrong' : 'empty');
-        container.appendChild(d);
-      });
-    }
-
-    function markProgress(key, status) {
-      const arr = state.progress[key] || [];
-      if (arr.length >= 10) arr.shift();
-      arr.push(status);
-      state.progress[key] = arr;
-      updateGlobalProgress();
-    }
-
-    function addPoints(gameKey, points) {
-      state.totalScore += points;
-      state.scores[gameKey] = (state.scores[gameKey] || 0) + points;
-      updateScores();
-      saveState();
-      addLeaderboardEntry(state.playerName || tr('you'), state.totalScore);
-    }
-
-    function randomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function solve24(nums) {
-      const values = nums.slice();
-      const combine = (arr, exprs) => {
-        if (arr.length === 1) {
-          return Math.abs(arr[0] - 24) < 1e-9 ? exprs[0] : null;
-        }
-        for (let i = 0; i < arr.length; i++) {
-          for (let j = i + 1; j < arr.length; j++) {
-            const a = arr[i];
-            const b = arr[j];
-            const restV = arr.filter((_, idx) => idx !== i && idx !== j);
-            const restE = exprs.filter((_, idx) => idx !== i && idx !== j);
-            const candidates = [
-              [a + b, `(${exprs[i]} + ${exprs[j]})`],
-              [a - b, `(${exprs[i]} - ${exprs[j]})`],
-              [b - a, `(${exprs[j]} - ${exprs[i]})`],
-              [a * b, `(${exprs[i]} * ${exprs[j]})`]
-            ];
-            if (Math.abs(b) > 1e-9) candidates.push([a / b, `(${exprs[i]} / ${exprs[j]})`]);
-            if (Math.abs(a) > 1e-9) candidates.push([b / a, `(${exprs[j]} / ${exprs[i]})`]);
-            for (const [v, e] of candidates) {
-              const result = combine([...restV, v], [...restE, e]);
-              if (result) return result;
-            }
-          }
-        }
-        return null;
-      };
-      return combine(values.map(Number), values.map(String));
-    }
-
-    function create24Question() {
-      const level = $('diff24').value;
-      const maxMap = { easy: 10, normal: 13, hard: 20, devil: 30 };
-      const max = maxMap[level] || 10;
-      let arr = [];
-      for (let tries = 0; tries < 300; tries++) {
-        arr = [randomInt(1, max), randomInt(1, max), randomInt(1, max), randomInt(1, max)];
-        if (solve24(arr)) break;
-      }
-      if (!solve24(arr)) arr = [1, 3, 4, 6];
-      const answer = solve24(arr);
-      state.questions.game24 = { nums: arr, answer };
-      $('q24').textContent = `Numbers: ${arr.join('  ')}`;
-      $('ans24').value = '';
-      setStatus('msg24', '', '');
-      $('show24Answer').textContent = '';
-      startTimer('game24', 20, () => {
-        if (state.page !== 'page24') return;
-        setStatus('msg24', tr('timeUp'), 'error');
-        markProgress('game24', 'wrong');
-        state.retryQueue.push({ type: 'game24', payload: state.questions.game24 });
-      });
-    }
-
-    function parseFormula(text) {
-      const s = text.replace(/\s+/g, '');
-      if (!s || !/^[0-9+\-*/().]+$/.test(s)) return null;
-      try {
-        const out = Function(`"use strict"; return (${s});`)();
-        return Number.isFinite(out) ? out : null;
-      } catch (e) {
-        return null;
-      }
-    }
-
-    function handle24Submit() {
-      const q = state.questions.game24;
-      if (!q) return;
-      const raw = $('ans24').value.trim();
-      const result = parseFormula(raw);
-      if (raw === '' || result === null) {
-        setStatus('msg24', tr('invalidFormula'), 'error');
-        return;
-      }
-      const nums = raw.match(/[0-9]+(?:\.[0-9]+)?/g) || [];
-      const sortedInput = nums.map(Number).sort((a, b) => a - b);
-      const sortedGiven = [...q.nums].sort((a, b) => a - b);
-      if (sortedInput.length !== 4 || sortedInput.some((n, i) => n !== sortedGiven[i]) || Math.abs(result - 24) > 1e-8) {
-        setStatus('msg24', tr('invalid24'), 'error');
-        markProgress('game24', 'wrong');
-        state.retryQueue.push({ type: 'game24', payload: q });
-        playTone('wrong');
-        clearTimer('game24');
-        return;
-      }
-      setStatus('msg24', tr('correct'), 'success');
-      $('show24Answer').textContent = `${tr('answerIs')}${q.answer}`;
-      addPoints('game24', getDifficultyValue('diff24'));
-      markProgress('game24', 'correct');
-      playTone('correct');
-      clearTimer('game24');
-      setTimeout(() => create24Question(), 700);
-    }
-
-    function show24Answer() {
-      const q = state.questions.game24;
-      if (!q) return;
-      $('show24Answer').textContent = `${tr('answerIs')}${q.answer}`;
-    }
-
-    function getDifficultyValue(selectId) {
-      const value = $(selectId)?.value || 'easy';
-      const map = { easy: 3, normal: 6, hard: 10, devil: 18 };
-      return map[value] || 3;
-    }
-
-    function createCalcQuestion(type = 'calc') {
-      const level = $(type === 'ultimate' ? 'diffUltimate' : 'diffCalc').value;
-      let q = '';
-      let answer = 0;
-
-      if (level === 'easy') {
-        const a = randomInt(6, 30);
-        const b = randomInt(2, 20);
-        q = `${a} + ${b} = ?`;
-        answer = a + b;
-      } else if (level === 'normal') {
-        const a = randomInt(5, 25);
-        const b = randomInt(2, 12);
-        q = `${a} × ${b} = ?`;
-        answer = a * b;
-      } else if (level === 'hard') {
-        const a = randomInt(10, 60);
-        const b = randomInt(2, 12);
-        const c = randomInt(3, 18);
-        q = `${a} + ${b} × ${c} = ?`;
-        answer = a + b * c;
-      } else {
-        const a = randomInt(12, 60);
-        const b = randomInt(2, 18);
-        const c = randomInt(2, 12);
-        q = `(${a} - ${b}) × ${c} = ?`;
-        answer = (a - b) * c;
-      }
-
-      state.questions[type] = { q, answer };
-      const qEl = type === 'ultimate' ? $('qUltimate') : $('qCalc');
-      const ansEl = type === 'ultimate' ? $('ansUltimate') : $('ansCalc');
-      const showEl = type === 'ultimate' ? $('showUltimateAnswer') : $('showCalcAnswer');
-      const msgEl = type === 'ultimate' ? 'msgUltimate' : 'msgCalc';
-      qEl.textContent = `Question: ${q}`;
-      ansEl.value = '';
-      showEl.textContent = '';
-      setStatus(msgEl, '', '');
-      const timerKey = type === 'ultimate' ? 'ultimate' : 'calc';
-      startTimer(timerKey, 18, () => {
-        if (state.page !== (type === 'ultimate' ? 'pageUltimate' : 'pageCalc')) return;
-        setStatus(msgEl, tr('timeUp'), 'error');
-        markProgress(type, 'wrong');
-        state.retryQueue.push({ type, payload: state.questions[type] });
-      });
-    }
-
-    function submitNumeric(type) {
-      const q = state.questions[type];
-      if (!q) return;
-      const inputId = type === 'ultimate' ? 'ansUltimate' : type === 'calc' ? 'ansCalc' : 'ansWord';
-      const msgId = type === 'ultimate' ? 'msgUltimate' : type === 'calc' ? 'msgCalc' : 'msgWord';
-      const diffId = type === 'ultimate' ? 'diffUltimate' : type === 'calc' ? 'diffCalc' : 'diffWord';
-      const raw = $(inputId).value.trim();
-      const value = Number(raw);
-      if (!raw || !Number.isFinite(value)) {
-        setStatus(msgId, tr('invalid'), 'error');
-        return;
-      }
-      if (Math.abs(value - q.answer) < 1e-8) {
-        setStatus(msgId, tr('correct'), 'success');
-        addPoints(type, getDifficultyValue(diffId));
-        markProgress(type, 'correct');
-        playTone('correct');
-        clearTimer(type);
-        setTimeout(() => createCalcQuestion(type), 700);
-      } else {
-        setStatus(msgId, tr('wrong'), 'error');
-        markProgress(type, 'wrong');
-        state.retryQueue.push({ type, payload: q });
-        playTone('wrong');
-      }
-    }
-
-    function showNumericAnswer(type) {
-      const q = state.questions[type];
-      if (!q) return;
-      const el = type === 'ultimate' ? $('showUltimateAnswer') : type === 'calc' ? $('showCalcAnswer') : $('showWordAnswer');
-      if (el) el.textContent = `${tr('answerIs')}${q.answer}`;
-    }
-
-    function createWordQuestion() {
-      const level = $('diffWord').value;
-      let q = '';
-      let answer = 0;
-
-      if (level === 'easy') {
-        const a = randomInt(8, 30);
-        const b = randomInt(5, 20);
-        q = `A has ${a} books and B has ${b} more. Total books?`;
-        answer = a + b;
-      } else if (level === 'normal') {
-        const a = randomInt(3, 20);
-        const b = randomInt(4, 30);
-        q = `A rectangle is ${a} by ${b}. What is the area?`;
-        answer = a * b;
-      } else if (level === 'hard') {
-        const head = randomInt(16, 45);
-        const feet = randomInt(30, 90);
-        const rabbits = (feet - 2 * head) / 2;
-        q = `There are ${head} heads and ${feet} legs. How many rabbits?`;
-        answer = rabbits;
-      } else {
-        const a = randomInt(6, 24);
-        const b = randomInt(5, 20);
-        q = `Two people walk toward each other at ${a} and ${b} m/min. After ${a + b} m, when do they meet?`;
-        answer = (a + b) / (a + b);
-      }
-
-      state.questions.word = { q, answer };
-      $('qWord').textContent = `Question: ${q}`;
-      $('ansWord').value = '';
-      $('showWordAnswer').textContent = '';
-      setStatus('msgWord', '', '');
-      startTimer('word', 20, () => {
-        if (state.page !== 'pageWord') return;
-        setStatus('msgWord', tr('timeUp'), 'error');
-        markProgress('word', 'wrong');
-        state.retryQueue.push({ type: 'word', payload: state.questions.word });
-      });
-    }
-
-    function handleWordSubmit() {
-      const q = state.questions.word;
-      if (!q) return;
-      const value = Number($('ansWord').value);
-      if (!Number.isFinite(value)) {
-        setStatus('msgWord', tr('invalid'), 'error');
-        return;
-      }
-      if (Math.abs(value - q.answer) < 1e-8) {
-        setStatus('msgWord', tr('correct'), 'success');
-        addPoints('word', getDifficultyValue('diffWord'));
-        markProgress('word', 'correct');
-        playTone('correct');
-        clearTimer('word');
-        setTimeout(createWordQuestion, 700);
-      } else {
-        setStatus('msgWord', tr('wrong'), 'error');
-        markProgress('word', 'wrong');
-        state.retryQueue.push({ type: 'word', payload: q });
-        playTone('wrong');
-      }
-    }
-
-    function createSudokuBoard() {
-      const board = $('sudokuBoard');
-      board.innerHTML = '';
-      const puzzle = [
-        [5, 3, 0, 0, 7, 0, 0, 0, 0],
-        [6, 0, 0, 1, 9, 5, 0, 0, 0],
-        [0, 9, 8, 0, 0, 0, 0, 6, 0],
-        [8, 0, 0, 0, 6, 0, 0, 0, 3],
-        [4, 0, 0, 8, 0, 3, 0, 0, 1],
-        [7, 0, 0, 0, 2, 0, 0, 0, 6],
-        [0, 6, 0, 0, 0, 0, 2, 8, 0],
-        [0, 0, 0, 4, 1, 9, 0, 0, 5],
-        [0, 0, 0, 0, 8, 0, 0, 7, 9]
-      ];
-      state.questions.sudoku = { board: puzzle.map(r => r.slice()) };
-      for (let row = 0; row < 9; row++) {
-        for (let col = 0; col < 9; col++) {
-          const input = document.createElement('input');
-          input.type = 'text';
-          input.maxLength = 1;
-          input.className = 'sudoku-cell';
-          input.value = puzzle[row][col] ? String(puzzle[row][col]) : '';
-          if (puzzle[row][col]) input.classList.add('fixed');
-          input.disabled = !!puzzle[row][col];
-          input.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/[^1-9]/g, '').slice(0, 1);
-          });
-          board.appendChild(input);
-        }
-      }
-      setStatus('msgSudoku', tr('sudokuRule'), 'info');
-      startTimer('sudoku', 50, () => {
-        if (state.page !== 'pageSudoku') return;
-        setStatus('msgSudoku', tr('timeUp'), 'error');
-        markProgress('sudoku', 'wrong');
-      });
-    }
-
-    function collectSudokuValues() {
-      const cells = [...document.querySelectorAll('.sudoku-cell')];
-      return cells.map(cell => {
-        const value = cell.value.trim();
-        return value ? Number(value) : 0;
-      });
-    }
-
-    function isSudokuSolved(values) {
-      const okSet = (arr) => new Set(arr).size === 9 && arr.every(n => n >= 1 && n <= 9);
-      for (let r = 0; r < 9; r++) {
-        const row = [];
-        for (let c = 0; c < 9; c++) row.push(values[r * 9 + c]);
-        if (!okSet(row)) return false;
-      }
-      for (let c = 0; c < 9; c++) {
-        const col = [];
-        for (let r = 0; r < 9; r++) col.push(values[r * 9 + c]);
-        if (!okSet(col)) return false;
-      }
-      for (let br = 0; br < 9; br += 3) {
-        for (let bc = 0; bc < 9; bc += 3) {
-          const box = [];
-          for (let r = br; r < br + 3; r++) {
-            for (let c = bc; c < bc + 3; c++) box.push(values[r * 9 + c]);
-          }
-          if (!okSet(box)) return false;
-        }
-      }
-      return true;
-    }
-
-    function checkSudoku() {
-      const values = collectSudokuValues();
-      if (values.some(v => v === 0)) {
-        setStatus('msgSudoku', tr('sudokuIncomplete'), 'error');
-        return;
-      }
-      if (!isSudokuSolved(values)) {
-        setStatus('msgSudoku', tr('sudokuWrong'), 'error');
-        markProgress('sudoku', 'wrong');
-        state.retryQueue.push({ type: 'sudoku', payload: state.questions.sudoku });
-        playTone('wrong');
-        return;
-      }
-      setStatus('msgSudoku', tr('sudokuCorrect'), 'success');
-      addPoints('sudoku', getDifficultyValue('diffSudoku'));
-      markProgress('sudoku', 'correct');
-      playTone('correct');
-      clearTimer('sudoku');
-      setTimeout(createSudokuBoard, 850);
-    }
-
-    function renderPlayers() {
-      const box = $('multiPlayers');
-      if (!box) return;
-      box.innerHTML = '';
-      state.players.forEach((player) => {
-        const row = document.createElement('div');
-        row.className = 'player-row';
-        const head = document.createElement('div');
-        head.className = 'player-head';
-        const left = document.createElement('span');
-        left.textContent = player.name;
-        const right = document.createElement('span');
-        right.textContent = `${tr('score')}: ${player.score}`;
-        head.appendChild(left);
-        head.appendChild(right);
-        const bar = document.createElement('div');
-        bar.className = 'mini-bar';
-        const fill = document.createElement('div');
-        fill.className = 'mini-fill';
-        fill.style.width = `${player.progress || 0}%`;
-        bar.appendChild(fill);
-        row.appendChild(head);
-        row.appendChild(bar);
-        box.appendChild(row);
-      });
-    }
-
-    function addBot() {
-      if (state.players.length >= 5) return;
-      state.players.push({ name: `${tr('bot')} ${state.players.length}`, score: 0, progress: 0, bot: true });
-      renderPlayers();
-    }
-
-    function clearPlayersList() {
-      state.players = [{ name: state.playerName || tr('you'), score: 0, progress: 0, bot: false }];
-      state.multiRunning = false;
-      state.multiQuestions = [];
-      state.multiIndex = 0;
-      $('multiQuestion').textContent = 'Question: --';
-      $('multiAns').value = '';
-      $('rankBox').classList.add('hidden');
-      renderPlayers();
-      setStatus('msgMulti', '', '');
-      clearTimer('multi');
-    }
-
-    function startMultiGame() {
-      if (!state.players.length) {
-        setStatus('msgMulti', tr('noPlayers'), 'error');
-        return;
-      }
-      state.multiRunning = true;
-      state.multiIndex = 0;
-      state.multiQuestions = Array.from({ length: 5 }, () => {
-        const a = randomInt(8, 50);
-        const b = randomInt(2, 20);
-        return { q: `${a} + ${b} = ?`, answer: a + b };
-      });
-      state.players.forEach((p) => {
-        p.score = 0;
-        p.progress = 0;
-      });
-      renderPlayers();
-      showMultiQuestion();
-    }
-
-    function showMultiQuestion() {
-      if (!state.multiRunning) return;
-      if (state.multiIndex >= state.multiQuestions.length) {
-        finishMulti();
-        return;
-      }
-      const q = state.multiQuestions[state.multiIndex];
-      $('multiQuestion').textContent = `Question ${state.multiIndex + 1}: ${q.q}`;
-      $('multiAns').value = '';
-      $('rankBox').classList.add('hidden');
-      clearTimer('multi');
-      startTimer('multi', 18, () => {
-        if (!state.multiRunning) return;
-        setStatus('msgMulti', tr('timeUp'), 'error');
-        state.multiIndex++;
-        markProgress('multi', 'wrong');
-        if (state.multiIndex >= state.multiQuestions.length) finishMulti();
-        else setTimeout(showMultiQuestion, 650);
-      });
-    }
-
-    function finishMulti() {
-      state.multiRunning = false;
-      const sorted = [...state.players].sort((a, b) => b.score - a.score);
-      $('multiQuestion').textContent = tr('finalRank');
-      const rankBox = $('rankBox');
-      rankBox.innerHTML = '';
-      rankBox.classList.remove('hidden');
-      const head = document.createElement('h3');
-      head.textContent = tr('finalRank');
-      rankBox.appendChild(head);
-      sorted.forEach((p, idx) => {
-        const row = document.createElement('div');
-        row.textContent = `${idx + 1}. ${p.name} - ${p.score}`;
-        rankBox.appendChild(row);
-      });
-      clearTimer('multi');
-      addLeaderboardEntry(state.playerName || tr('you'), state.totalScore);
-    }
-
-    function submitMulti() {
-      if (!state.multiRunning) {
-        setStatus('msgMulti', tr('noPlayers'), 'error');
-        return;
-      }
-      const q = state.multiQuestions[state.multiIndex];
-      if (!q) return;
-      const value = Number($('multiAns').value);
-      if (!Number.isFinite(value)) {
-        setStatus('msgMulti', tr('invalid'), 'error');
-        return;
-      }
-      const player = state.players[0];
-      if (Math.abs(value - q.answer) < 1e-8) {
-        player.score += 10;
-        state.totalScore += 10;
-        state.scores.multi = (state.scores.multi || 0) + 10;
-        player.progress = ((state.multiIndex + 1) / state.multiQuestions.length) * 100;
-        setStatus('msgMulti', tr('correct'), 'success');
-        markProgress('multi', 'correct');
-        playTone('correct');
-        updateScores();
-        saveState();
-      } else {
-        setStatus('msgMulti', tr('wrong'), 'error');
-        markProgress('multi', 'wrong');
-        playTone('wrong');
-      }
-      renderPlayers();
-      clearTimer('multi');
-      state.multiIndex++;
-      setTimeout(showMultiQuestion, 600);
-    }
-
-    function playTone(type = 'correct') {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = type === 'wrong' ? 'square' : 'sine';
-      osc.frequency.value = type === 'wrong' ? 180 : 620;
-      gain.gain.value = 0.06;
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.12);
-      setTimeout(() => ctx.close(), 200);
-    }
-
-    function startTimer(key, seconds, onTimeout) {
-      clearInterval(state.timers[key]);
-      const label = $('timer' + (key.charAt(0).toUpperCase() + key.slice(1)));
-      if (label) label.textContent = `${seconds}s`;
-      const start = Date.now();
-      state.timers[key] = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - start) / 1000);
-        const left = Math.max(0, seconds - elapsed);
-        if (label) label.textContent = `${left}s`;
-        if (left <= 0) {
-          clearInterval(state.timers[key]);
-          if (onTimeout) onTimeout();
-        }
-      }, 250);
-    }
-
-    function clearTimer(key) {
-      clearInterval(state.timers[key]);
-      const label = $('timer' + (key.charAt(0).toUpperCase() + key.slice(1)));
-      if (label) label.textContent = '';
-    }
-
-    function handleRetryQueue() {
-      const next = state.retryQueue.shift();
-      if (!next) {
-        setStatus('msg24', tr('noRetry'), 'info');
-        return;
-      }
-      const { type, payload } = next;
-      if (type === 'game24') {
-        showPage('page24');
-        state.questions.game24 = payload;
-        $('q24').textContent = `Numbers: ${payload.nums.join('  ')}`;
-        $('ans24').value = '';
-        setStatus('msg24', tr('retryQueue'), 'info');
-        startTimer('game24', 20, () => {
-          if (state.page !== 'page24') return;
-          setStatus('msg24', tr('timeUp'), 'error');
-          markProgress('game24', 'wrong');
-          state.retryQueue.push({ type: 'game24', payload: state.questions.game24 });
-        });
-      } else if (type === 'calc' || type === 'ultimate') {
-        const isUltimate = type === 'ultimate';
-        showPage(isUltimate ? 'pageUltimate' : 'pageCalc');
-        state.questions[type] = payload;
-        createCalcQuestion(type);
-        setStatus(isUltimate ? 'msgUltimate' : 'msgCalc', tr('retryQueue'), 'info');
-      } else if (type === 'word') {
-        showPage('pageWord');
-        state.questions.word = payload;
-        $('qWord').textContent = `Question: ${payload.q}`;
-        $('ansWord').value = '';
-        setStatus('msgWord', tr('retryQueue'), 'info');
-        startTimer('word', 20, () => {
-          if (state.page !== 'pageWord') return;
-          setStatus('msgWord', tr('timeUp'), 'error');
-          markProgress('word', 'wrong');
-          state.retryQueue.push({ type: 'word', payload: state.questions.word });
-        });
-      } else if (type === 'sudoku') {
-        showPage('pageSudoku');
-        createSudokuBoard();
-        setStatus('msgSudoku', tr('retryQueue'), 'info');
-      }
-    }
-
     function setLanguage(lang) {
       state.lang = lang;
       document.documentElement.lang = lang;
-      document.querySelectorAll('[data-i18n]').forEach((el) => {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.dataset.i18n;
-        if (T[lang][key]) el.textContent = T[lang][key];
+        if (T[lang] && T[lang][key]) el.textContent = T[lang][key];
       });
       $('playerName').placeholder = tr('playerName');
       $('playerId').placeholder = tr('playerId');
-      $('ans24').placeholder = 'Use + - * / ( )';
-      $('ansCalc').placeholder = 'Enter answer';
-      $('ansWord').placeholder = 'Enter answer';
-      $('multiAns').placeholder = 'Enter answer';
-      $('ansUltimate').placeholder = 'Enter answer';
       saveState();
     }
 
-    function fillSelects() {
-      const options = [
-        { value: 'easy', label: tr('easy') },
-        { value: 'normal', label: tr('normal') },
-        { value: 'hard', label: tr('hard') },
-        { value: 'devil', label: tr('devil') }
-      ];
-      ['diff24', 'diffCalc', 'diffWord', 'diffSudoku', 'diffUltimate'].forEach((id) => {
-        const sel = $(id);
-        if (!sel) return;
-        sel.innerHTML = options.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('');
-      });
-    }
-
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach((page) => {
-        page.classList.toggle('active', page.id === pageId);
-      });
-      state.page = pageId;
-    }
-
-    function bindEvents() {
-      document.querySelectorAll('[data-page]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const page = btn.dataset.page;
-          if (page === 'pageUltimate' && state.totalScore < UNLOCK_TOTAL) {
-            setStatus('msgUltimate', tr('need40'), 'error');
-            return;
-          }
-          showPage(page);
-          if (page === 'page24') create24Question();
-          if (page === 'pageCalc') createCalcQuestion('calc');
-          if (page === 'pageWord') createWordQuestion();
-          if (page === 'pageSudoku') createSudokuBoard();
-          if (page === 'pageUltimate') createCalcQuestion('ultimate');
-        });
-      });
-
-      document.querySelectorAll('[data-back]').forEach((btn) => {
-        btn.addEventListener('click', () => showPage('homePage'));
-      });
-
-      $('langBtn').addEventListener('click', () => {
-        $('langMenu').classList.toggle('open');
-        $('langBtn').setAttribute('aria-expanded', $('langMenu').classList.contains('open'));
-      });
-
-      document.addEventListener('click', (event) => {
-        if (!event.target.closest('.lang-wrap')) {
-          $('langMenu').classList.remove('open');
-        }
-      });
-
-      $('playerName').addEventListener('input', (e) => {
-        state.playerName = e.target.value.slice(0, 24);
-        if (state.players[0]) state.players[0].name = state.playerName || tr('you');
-        renderPlayers();
-        saveState();
-      });
-
-      $('playerId').addEventListener('input', (e) => {
-        state.playerId = e.target.value.slice(0, 20);
-        saveState();
-      });
-
-      $('submit24Btn').addEventListener('click', handle24Submit);
-      $('next24Btn').addEventListener('click', create24Question);
-      $('show24Btn').addEventListener('click', show24Answer);
-      $('submitCalcBtn').addEventListener('click', () => submitNumeric('calc'));
-      $('nextCalcBtn').addEventListener('click', () => createCalcQuestion('calc'));
-      $('showCalcBtn').addEventListener('click', () => showNumericAnswer('calc'));
-      $('submitWordBtn').addEventListener('click', handleWordSubmit);
-      $('nextWordBtn').addEventListener('click', createWordQuestion);
-      $('showWordBtn').addEventListener('click', () => showNumericAnswer('word'));
-      $('checkSudokuBtn').addEventListener('click', checkSudoku);
-      $('newSudokuBtn').addEventListener('click', createSudokuBoard);
-      $('retrySudokuBtn').addEventListener('click', handleRetryQueue);
-      $('addBotBtn').addEventListener('click', addBot);
-      $('clearPlayersBtn').addEventListener('click', clearPlayersList);
-      $('startMultiBtn').addEventListener('click', startMultiGame);
-      $('submitMultiBtn').addEventListener('click', submitMulti);
-      $('retryMultiBtn').addEventListener('click', handleRetryQueue);
-      $('submitUltimateBtn').addEventListener('click', () => submitNumeric('ultimate'));
-      $('nextUltimateBtn').addEventListener('click', () => createCalcQuestion('ultimate'));
-      $('showUltimateBtn').addEventListener('click', () => showNumericAnswer('ultimate'));
-
-      ['diff24', 'diffCalc', 'diffWord', 'diffSudoku', 'diffUltimate'].forEach((id) => {
-        $(id)?.addEventListener('change', () => {
-          if (id === 'diff24' && state.page === 'page24') create24Question();
-          if (id === 'diffCalc' && state.page === 'pageCalc') createCalcQuestion('calc');
-          if (id === 'diffWord' && state.page === 'pageWord') createWordQuestion();
-          if (id === 'diffSudoku' && state.page === 'pageSudoku') createSudokuBoard();
-          if (id === 'diffUltimate' && state.page === 'pageUltimate') createCalcQuestion('ultimate');
-        });
-      });
-    }
-
-    function initLangMenu() {
+    function renderLangMenu() {
       const menu = $('langMenu');
       menu.innerHTML = '';
       Object.entries(LANGS).forEach(([code, label]) => {
@@ -1883,34 +728,431 @@
         btn.addEventListener('click', () => {
           setLanguage(code);
           menu.classList.remove('open');
+          $('langBtn').setAttribute('aria-expanded', 'false');
         });
         menu.appendChild(btn);
       });
     }
 
-    function bootstrap() {
-      loadState();
-      initLangMenu();
-      fillSelects();
-      bindEvents();
-      $('playerName').value = state.playerName;
-      $('playerId').value = state.playerId;
-      state.players[0].name = state.playerName || tr('you');
-      setLanguage(state.lang);
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(page => page.classList.toggle('active', page.id === id));
+      state.page = id;
+    }
+
+    function updateScores() {
+      $('topScore').textContent = state.totalScore;
+      $('homeScore').textContent = state.totalScore;
+      for (const key of ['page24','calc','word','sudoku','ultimate']) {
+        const scoreKey = key === 'page24' ? 'page24' : key;
+        const el = $(key === 'page24' ? 'score24' : key === 'calc' ? 'scoreCalc' : key === 'word' ? 'scoreWord' : key === 'sudoku' ? 'scoreSudoku' : 'scoreUltimate');
+        if (el) el.textContent = state.scores[scoreKey] || 0;
+      }
+    }
+
+    function renderMiniProgress(containerId, arr) {
+      const container = $(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      const values = Array.isArray(arr) ? arr.slice(-20) : [];
+      while (values.length < 20) values.push('empty');
+      values.forEach(val => {
+        const d = document.createElement('div');
+        d.className = 'dot ' + (val === 'correct' ? 'correct' : val === 'wrong' ? 'wrong' : 'empty');
+        container.appendChild(d);
+      });
+    }
+
+    function markProgress(key, status) {
+      const list = state.progress[key] || [];
+      list.push(status);
+      if (list.length > 20) list.shift();
+      state.progress[key] = list;
+      renderMiniProgress('progress' + key.replace('page', '').replace('calc', 'Calc').replace('word', 'Word').replace('sudoku', 'Sudoku').replace('ultimate', 'Ultimate'), list);
+    }
+
+    function updateTopTimerText(value) {
+      const el = $('topTimer');
+      if (!el) return;
+      el.textContent = `${value}s`;
+    }
+
+    function clearTimer() {
+      if (state.timerId) clearInterval(state.timerId);
+      state.timerId = null;
+    }
+
+    function startTimer(seconds, onExpire) {
+      clearTimer();
+      state.topTimer = seconds;
+      updateTopTimerText(seconds);
+      const perGameTimer = (id) => {
+        const el = $(id);
+        if (el) el.textContent = `${seconds}s`;
+      };
+      perGameTimer('timer24');
+      perGameTimer('timerCalc');
+      perGameTimer('timerWord');
+      perGameTimer('timerSudoku');
+      perGameTimer('timerUltimate');
+
+      state.timerId = setInterval(() => {
+        state.topTimer -= 1;
+        updateTopTimerText(Math.max(0, state.topTimer));
+        if (state.topTimer <= 0) {
+          clearTimer();
+          if (onExpire) onExpire();
+          const text = tr('timeUp');
+          updateTopTimerText(text);
+          ['timer24', 'timerCalc', 'timerWord', 'timerSudoku', 'timerUltimate'].forEach(id => {
+            const el = $(id); if (el) el.textContent = text;
+          });
+        }
+      }, 1000);
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function solve24(nums) {
+      const arr = nums.slice();
+      const evaluate = (values, expr) => {
+        if (values.length === 1) {
+          return Math.abs(values[0] - 24) < 1e-8 ? expr : null;
+        }
+        for (let i = 0; i < values.length; i++) {
+          for (let j = i + 1; j < values.length; j++) {
+            const rest = values.filter((_, idx) => idx !== i && idx !== j);
+            const a = values[i];
+            const b = values[j];
+            const candidates = [
+              [a + b, `(${expr} + ${b})`],
+              [a - b, `(${expr} - ${b})`],
+              [b - a, `(${b} - ${expr})`],
+              [a * b, `(${expr} * ${b})`],
+              [a / b, `(${expr} / ${b})`],
+              [b / a, `(${b} / ${expr})`]
+            ];
+            for (const [v, text] of candidates) {
+              if (!Number.isFinite(v)) continue;
+              const result = evaluate([...rest, v], text);
+              if (result) return result;
+            }
+          }
+        }
+        return null;
+      };
+      return evaluate(arr, arr[0]) || null;
+    }
+
+    function create24Question() {
+      let nums = [randomInt(1, 10), randomInt(1, 10), randomInt(1, 10), randomInt(1, 10)];
+      let answer = solve24(nums);
+      while (!answer) {
+        nums = [randomInt(1, 10), randomInt(1, 10), randomInt(1, 10), randomInt(1, 10)];
+        answer = solve24(nums);
+      }
+      state.questions.page24 = { nums, answer };
+      $('q24').textContent = `题目：${nums.join(' ')} = 24`;
+      $('ans24').value = '';
+      setStatus('msg24', '', '');
+      $('show24Answer').textContent = '';
+      startTimer(40, () => {
+        setStatus('msg24', tr('timeUp'), 'error');
+        markProgress('page24', 'wrong');
+      });
+    }
+
+    function createCalcQuestion() {
+      const level = $('diffCalc').value;
+      let q = '';
+      let answer = 0;
+      if (level === 'easy') {
+        const a = randomInt(5, 20); const b = randomInt(2, 15); q = `${a} + ${b}`; answer = a + b;
+      } else if (level === 'normal') {
+        const a = randomInt(12, 45); const b = randomInt(3, 12); q = `${a} × ${b}`; answer = a * b;
+      } else if (level === 'hard') {
+        const a = randomInt(15, 80); const b = randomInt(5, 25); const c = randomInt(2, 9); q = `(${a} - ${b}) × ${c}`; answer = (a - b) * c;
+      } else {
+        const a = randomInt(30, 120); const b = randomInt(7, 25); const c = randomInt(3, 12); q = `(${a} + ${b}) ÷ ${c}`; answer = Math.round((a + b) / c);
+      }
+      state.questions.calc = { answer };
+      $('qCalc').textContent = `题目：${q} = ?`;
+      $('ansCalc').value = '';
+      setStatus('msgCalc', '', '');
+      $('showCalcAnswer').textContent = '';
+      startTimer(40, () => {
+        setStatus('msgCalc', tr('timeUp'), 'error');
+        markProgress('calc', 'wrong');
+      });
+    }
+
+    function createWordQuestion() {
+      const level = $('diffWord').value;
+      let q = '';
+      let answer = 0;
+      if (level === 'easy') {
+        const a = randomInt(8, 30); const b = randomInt(2, 12); q = `一件商品原价 ${a} 元，打折后再减 ${b} 元，最后价格是多少？`; answer = a - b;
+      } else if (level === 'normal') {
+        const a = randomInt(5, 18); const b = randomInt(4, 20); q = `小明有 ${a} 个糖果，送给朋友 ${b} 个后还剩多少？`; answer = a - b;
+      } else if (level === 'hard') {
+        const a = randomInt(12, 60); const b = randomInt(3, 15); q = `${a} 个人分成 ${b} 组，每组多少人？`; answer = Math.round(a / b);
+      } else {
+        const a = randomInt(30, 90); const b = randomInt(4, 20); q = `一辆车每小时行驶 ${a} 公里，共行驶 ${b} 小时，距离是多少？`; answer = a * b;
+      }
+      state.questions.word = { answer };
+      $('qWord').textContent = `题目：${q}`;
+      $('ansWord').value = '';
+      setStatus('msgWord', '', '');
+      $('showWordAnswer').textContent = '';
+      startTimer(40, () => {
+        setStatus('msgWord', tr('timeUp'), 'error');
+        markProgress('word', 'wrong');
+      });
+    }
+
+    function buildSudoku() {
+      const board = $('sudokuBoard');
+      board.innerHTML = '';
+      const puzzle = [
+        [5,3,0,0,7,0,0,0,0],
+        [6,0,0,1,9,5,0,0,0],
+        [0,9,8,0,0,0,0,6,0],
+        [8,0,0,0,6,0,0,0,3],
+        [4,0,0,8,0,3,0,0,1],
+        [7,0,0,0,2,0,0,0,6],
+        [0,6,0,0,0,0,2,8,0],
+        [0,0,0,4,1,9,0,0,5],
+        [0,0,0,0,8,0,0,7,9]
+      ];
+      for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.maxLength = 1;
+          input.className = 'sudoku-cell';
+          if (puzzle[row][col]) {
+            input.value = String(puzzle[row][col]);
+            input.disabled = true;
+            input.classList.add('fixed');
+          }
+          input.addEventListener('input', () => {
+            input.value = input.value.replace(/[^1-9]/g, '').slice(0, 1);
+          });
+          board.appendChild(input);
+        }
+      }
+      setStatus('msgSudoku', tr('sudokuRule'), 'info');
+      startTimer(40, () => {
+        setStatus('msgSudoku', tr('timeUp'), 'error');
+        markProgress('sudoku', 'wrong');
+      });
+    }
+
+    function checkSudoku() {
+      const cells = [...document.querySelectorAll('.sudoku-cell')];
+      if (cells.some(cell => !cell.disabled && !cell.value)) {
+        setStatus('msgSudoku', tr('sudokuIncomplete'), 'error');
+        return;
+      }
+      const grid = [];
+      for (let i = 0; i < 9; i++) {
+        grid.push(cells.slice(i * 9, i * 9 + 9).map(el => Number(el.value || 0)));
+      }
+      const valid = (arr) => arr.length === 9 && new Set(arr).size === 9 && arr.every(n => n > 0);
+      const rows = grid.every(valid);
+      const cols = Array.from({ length: 9 }, (_, c) => grid.map(r => r[c])).every(valid);
+      const boxes = Array.from({ length: 9 }, (_, idx) => {
+        const r = Math.floor(idx / 3) * 3;
+        const c = (idx % 3) * 3;
+        const values = [];
+        for (let rr = r; rr < r + 3; rr++) {
+          for (let cc = c; cc < c + 3; cc++) values.push(grid[rr][cc]);
+        }
+        return valid(values);
+      }).every(Boolean);
+      if (rows && cols && boxes) {
+        setStatus('msgSudoku', tr('sudokuCorrect'), 'success');
+        state.totalScore += 10;
+        markProgress('sudoku', 'correct');
+      } else {
+        setStatus('msgSudoku', tr('sudokuWrong'), 'error');
+        markProgress('sudoku', 'wrong');
+      }
       updateScores();
-      renderLeaderboard();
-      renderPlayers();
-      updateGlobalProgress();
-      create24Question();
-      createCalcQuestion('calc');
-      createWordQuestion();
-      createSudokuBoard();
-      createCalcQuestion('ultimate');
-      showPage('homePage');
       saveState();
     }
 
-    bootstrap();
+    function createUltimateQuestion() {
+      const level = $('diffUltimate').value;
+      let answer = 0;
+      let q = '';
+      if (level === 'easy') {
+        const a = randomInt(8, 25); const b = randomInt(5, 20); q = `${a} + ${b}`; answer = a + b;
+      } else if (level === 'normal') {
+        const a = randomInt(15, 50); const b = randomInt(8, 22); q = `${a} × ${b}`; answer = a * b;
+      } else if (level === 'hard') {
+        const a = randomInt(30, 80); const b = randomInt(5, 20); const c = randomInt(2, 9); q = `(${a} - ${b}) × ${c}`; answer = (a - b) * c;
+      } else {
+        const a = randomInt(40, 120); const b = randomInt(12, 40); const c = randomInt(2, 9); q = `(${a} + ${b}) ÷ ${c}`; answer = Math.round((a + b) / c);
+      }
+      state.questions.ultimate = { answer };
+      $('qUltimate').textContent = `题目：${q} = ?`;
+      $('ansUltimate').value = '';
+      setStatus('msgUltimate', '', '');
+      $('showUltimateAnswer').textContent = '';
+      startTimer(40, () => {
+        setStatus('msgUltimate', tr('timeUp'), 'error');
+        markProgress('ultimate', 'wrong');
+      });
+    }
+
+    function bindDifficultySelects() {
+      const ids = ['diff24', 'diffCalc', 'diffWord', 'diffSudoku', 'diffUltimate'];
+      ids.forEach(id => {
+        const el = $(id);
+        if (!el) return;
+        el.innerHTML = [
+          '<option value="easy">Easy (+3)</option>',
+          '<option value="normal">Normal (+6)</option>',
+          '<option value="hard">Hard (+10)</option>',
+          '<option value="devil">Extreme (+18)</option>'
+        ].join('');
+        if (id === 'diffUltimate') el.value = 'devil';
+        else el.value = 'easy';
+      });
+    }
+
+    function bindEvents() {
+      document.querySelectorAll('[data-page]').forEach(btn => {
+        btn.addEventListener('click', () => showPage(btn.dataset.page));
+      });
+      document.querySelectorAll('[data-back]').forEach(btn => {
+        btn.addEventListener('click', () => showPage('homePage'));
+      });
+
+      $('langBtn').addEventListener('click', () => {
+        const menu = $('langMenu');
+        const open = menu.classList.toggle('open');
+        $('langBtn').setAttribute('aria-expanded', String(open));
+      });
+
+      document.body.addEventListener('click', (e) => {
+        if (!e.target.closest('.lang-wrap')) {
+          $('langMenu').classList.remove('open');
+          $('langBtn').setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      $('submit24Btn').addEventListener('click', () => {
+        const v = Number($('ans24').value);
+        if (Number.isNaN(v)) { setStatus('msg24', tr('invalid'), 'error'); return; }
+        if (Math.abs(v - 24) < 1e-8) {
+          setStatus('msg24', tr('correct'), 'success');
+          state.totalScore += 3;
+          state.scores.page24 += 3;
+          markProgress('page24', 'correct');
+        } else {
+          setStatus('msg24', tr('wrong'), 'error');
+          markProgress('page24', 'wrong');
+        }
+        updateScores();
+        saveState();
+      });
+      $('next24Btn').addEventListener('click', create24Question);
+      $('show24Btn').addEventListener('click', () => $('show24Answer').textContent = tr('answerIs') + state.questions.page24.answer);
+
+      $('submitCalcBtn').addEventListener('click', () => {
+        const v = Number($('ansCalc').value);
+        if (Number.isNaN(v)) { setStatus('msgCalc', tr('invalid'), 'error'); return; }
+        if (Math.abs(v - state.questions.calc.answer) < 1e-6) {
+          setStatus('msgCalc', tr('correct'), 'success');
+          state.totalScore += 5;
+          state.scores.calc += 5;
+          markProgress('calc', 'correct');
+        } else {
+          setStatus('msgCalc', tr('wrong'), 'error');
+          markProgress('calc', 'wrong');
+        }
+        updateScores();
+        saveState();
+      });
+      $('nextCalcBtn').addEventListener('click', createCalcQuestion);
+      $('showCalcBtn').addEventListener('click', () => $('showCalcAnswer').textContent = tr('answerIs') + state.questions.calc.answer);
+
+      $('submitWordBtn').addEventListener('click', () => {
+        const v = Number($('ansWord').value);
+        if (Number.isNaN(v)) { setStatus('msgWord', tr('invalid'), 'error'); return; }
+        if (Math.abs(v - state.questions.word.answer) < 1e-6) {
+          setStatus('msgWord', tr('correct'), 'success');
+          state.totalScore += 6;
+          state.scores.word += 6;
+          markProgress('word', 'correct');
+        } else {
+          setStatus('msgWord', tr('wrong'), 'error');
+          markProgress('word', 'wrong');
+        }
+        updateScores();
+        saveState();
+      });
+      $('nextWordBtn').addEventListener('click', createWordQuestion);
+      $('showWordBtn').addEventListener('click', () => $('showWordAnswer').textContent = tr('answerIs') + state.questions.word.answer);
+
+      $('checkSudokuBtn').addEventListener('click', checkSudoku);
+      $('newSudokuBtn').addEventListener('click', buildSudoku);
+      $('retrySudokuBtn').addEventListener('click', () => setStatus('msgSudoku', tr('retryQueue'), 'info'));
+
+      $('submitUltimateBtn').addEventListener('click', () => {
+        const v = Number($('ansUltimate').value);
+        if (Number.isNaN(v)) { setStatus('msgUltimate', tr('invalid'), 'error'); return; }
+        if (Math.abs(v - state.questions.ultimate.answer) < 1e-6) {
+          setStatus('msgUltimate', tr('correct'), 'success');
+          state.totalScore += 18;
+          state.scores.ultimate += 18;
+          markProgress('ultimate', 'correct');
+        } else {
+          setStatus('msgUltimate', tr('wrong'), 'error');
+          markProgress('ultimate', 'wrong');
+        }
+        updateScores();
+        saveState();
+      });
+      $('nextUltimateBtn').addEventListener('click', createUltimateQuestion);
+      $('showUltimateBtn').addEventListener('click', () => $('showUltimateAnswer').textContent = tr('answerIs') + state.questions.ultimate.answer);
+
+      $('playerName').addEventListener('input', e => {
+        state.playerName = e.target.value.slice(0, 24);
+        saveState();
+      });
+      $('playerId').addEventListener('input', e => {
+        state.playerId = e.target.value.slice(0, 20);
+        saveState();
+      });
+    }
+
+    function init() {
+      loadState();
+      renderLangMenu();
+      bindDifficultySelects();
+      bindEvents();
+      $('playerName').value = state.playerName;
+      $('playerId').value = state.playerId;
+      setLanguage(state.lang);
+      renderMiniProgress('progress24', state.progress.page24);
+      renderMiniProgress('progressCalc', state.progress.calc);
+      renderMiniProgress('progressWord', state.progress.word);
+      renderMiniProgress('progressSudoku', state.progress.sudoku);
+      renderMiniProgress('progressUltimate', state.progress.ultimate);
+      create24Question();
+      createCalcQuestion();
+      createWordQuestion();
+      buildSudoku();
+      createUltimateQuestion();
+      updateScores();
+      showPage('homePage');
+    }
+
+    init();
   </script>
 </body>
 </html>

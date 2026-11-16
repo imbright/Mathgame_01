@@ -1,388 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Math Puzzle Park</title>
   <style>
-    :root {
-      --bg1: #eef4ff;
-      --bg2: #eefaf4;
-      --card: #ffffff;
-      --soft: #f7f9ff;
-      --line: #e6ebf3;
-      --text: #1d2a3a;
-      --muted: #63758b;
-      --primary: #4d6ef3;
-      --green: #22b66d;
-      --red: #ea5a55;
-      --yellow: #efb94e;
-      --gold: #a86d00;
-      --shadow: 0 16px 36px rgba(24, 41, 72, .10);
-      --white: #ffffff;
-    }
-
-    * { box-sizing: border-box; }
-    html, body {
-      margin: 0;
-      min-height: 100vh;
-      background: linear-gradient(140deg, var(--bg1), var(--bg2));
-      color: var(--text);
-      font-family: "Segoe UI", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
-    }
-    body { overflow-x: hidden; }
-
-    .app {
-      max-width: 1220px;
-      margin: 0 auto;
-      padding: 22px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      background: rgba(255,255,255,.78);
-      border: 1px solid rgba(255,255,255,.8);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      padding: 16px 18px;
-      position: sticky;
-      top: 12px;
-      z-index: 20;
-      backdrop-filter: blur(10px);
-    }
-
-    .brand {
-      font-size: clamp(1.7rem, 2vw, 2.2rem);
-      font-weight: 900;
-      letter-spacing: .03em;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .pill {
-      min-width: 150px;
-      text-align: center;
-      padding: 10px 16px;
-      border-radius: 14px;
-      border: 1px solid #f1d289;
-      background: #fff9ea;
-      color: var(--gold);
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .timer-pill {
-      min-width: 110px;
-      background: #fff;
-      border-color: var(--line);
-      color: var(--text);
-    }
-
-    .lang-wrap { position: relative; }
-    .lang-btn {
-      min-width: 118px;
-      border: 1px solid var(--line);
-      background: #fff;
-      color: var(--text);
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-size: .98rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 8px 16px rgba(15,23,42,0.04);
-    }
-
-    .lang-menu {
-      position: absolute;
-      right: 0;
-      top: calc(100% + 8px);
-      min-width: 170px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      padding: 6px;
-      display: none;
-      z-index: 30;
-    }
-    .lang-menu.open { display: grid; }
-    .lang-option {
-      border: none;
-      background: #fff;
-      text-align: left;
-      border-radius: 10px;
-      padding: 10px 12px;
-      cursor: pointer;
-      font-size: .96rem;
-      color: var(--text);
-      font-weight: 600;
-    }
-    .lang-option:hover { background: #f3f6ff; }
-
-    .page { display: none; }
-    .page.active { display: block; animation: fade .22s ease; }
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: none; }
-    }
-
-    .card {
-      padding: 24px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: var(--card);
-      box-shadow: var(--shadow);
-    }
-
-    .home-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .title {
-      margin: 0;
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      letter-spacing: .04em;
-      font-weight: 900;
-    }
-
-    .player-box {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      background: linear-gradient(135deg, #f9fbff, #f2f6ff);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 20px;
-    }
-
-    .field {
-      flex: 1;
-      min-width: 220px;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-    .field label {
-      color: var(--muted);
-      font-weight: 700;
-      font-size: .95rem;
-    }
-    .field input, .answer, .difficulty select {
-      width: 100%;
-      background: #fff;
-      color: var(--text);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color .18s ease, box-shadow .18s ease;
-    }
-    .field input:focus, .answer:focus, .difficulty select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(77,110,243,.08);
-    }
-
-    .game-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 16px;
-    }
-
-    .game-btn {
-      width: 100%;
-      min-height: 96px;
-      border: none;
-      border-radius: 18px;
-      color: #fff;
-      font-size: 1.08rem;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 12px 22px rgba(26,45,90,0.12);
-      transition: transform .16s ease, filter .16s ease;
-    }
-    .game-btn:hover { transform: translateY(-2px); filter: brightness(1.04); }
-    .game-btn:disabled { opacity: .5; cursor: not-allowed; }
-    .btn-blue { background: linear-gradient(135deg, #5575ff, #7d94ff); }
-    .btn-green { background: linear-gradient(135deg, #22b66d, #33d188); }
-    .btn-orange { background: linear-gradient(135deg, #f39a2c, #ffbb5c); }
-    .btn-purple { background: linear-gradient(135deg, #815ef1, #aa82ff); }
-    .btn-red { background: linear-gradient(135deg, #eb5a5a, #ff7f7b); }
-    .btn-gold { background: linear-gradient(135deg, #cf931b, #efbe53); }
-
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .back-btn, .action-btn, .soft-btn {
-      border: none;
-      border-radius: 12px;
-      padding: 11px 16px;
-      font-weight: 800;
-      cursor: pointer;
-      color: #fff;
-    }
-    .back-btn { background: linear-gradient(135deg, #eb5a5a, #ff7b7b); }
-    .action-btn.btn-green { background: linear-gradient(135deg, #1caf69, #2ad97d); }
-    .action-btn.btn-blue { background: linear-gradient(135deg, #5575ff, #7d94ff); }
-    .action-btn.btn-orange { background: linear-gradient(135deg, #ef9b30, #ffbd5d); }
-    .action-btn.btn-red { background: linear-gradient(135deg, #eb5a5a, #ff7b7b); }
-    .soft-btn { background: linear-gradient(135deg, #edf3ff, #eff5ff); color: var(--primary); }
-
-    .mini-score {
-      background: #fff9ea;
-      border: 1px solid #f1d089;
-      border-radius: 12px;
-      padding: 10px 12px;
-      color: var(--gold);
-      font-weight: 800;
-    }
-
-    .difficulty {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--muted);
-      font-weight: 700;
-      flex-wrap: wrap;
-    }
-    .difficulty select {
-      min-width: 210px;
-      background: #fff;
-    }
-
-    .question-box {
-      min-height: 90px;
-      margin: 18px 0 12px;
-      padding: 18px 16px;
-      border: 1px solid #e4ebff;
-      background: #f8faff;
-      border-radius: 16px;
-      font-size: clamp(1.1rem, 2vw, 1.42rem);
-      line-height: 1.6;
-      font-weight: 800;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .answer-input {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: #fff;
-      padding: 14px 16px;
-      font-size: 1.04rem;
-      outline: none;
-    }
-
-    .controls {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-
-    .status {
-      min-height: 28px;
-      margin-top: 16px;
-      font-weight: 800;
-    }
-    .status.success { color: var(--green); }
-    .status.error { color: var(--red); }
-    .status.info { color: var(--primary); }
-
-    .progress-mini {
-      display: grid;
-      grid-template-columns: repeat(20, minmax(4px, 1fr));
-      gap: 4px;
-      margin: 12px 0 6px;
-      align-items: center;
-    }
-    .progress-mini .dot {
-      width: 100%;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background: #fff;
-      border: 2px solid #dde6f4;
-    }
-    .progress-mini .dot.correct { background: var(--green); border-color: #1ea764; }
-    .progress-mini .dot.wrong { background: var(--red); border-color: #d74e48; }
-
-    .sudoku-board {
-      display: grid;
-      grid-template-columns: repeat(9, minmax(0, 1fr));
-      gap: 4px;
-      max-width: 430px;
-      margin: 18px auto 8px;
-      padding: 8px;
-      border: 2px solid #ced9ee;
-      border-radius: 14px;
-      background: #f7f9ff;
-    }
-    .sudoku-cell {
-      width: 100%;
-      aspect-ratio: 1;
-      border: 1px solid #dfe7f2;
-      border-radius: 8px;
-      background: #fff;
-      text-align: center;
-      font-size: 1.12rem;
-      font-weight: 800;
-      color: var(--text);
-      outline: none;
-    }
-    .sudoku-cell.fixed {
-      background: #eef3ff;
-      color: var(--muted);
-    }
-    .sudoku-cell:nth-child(3n) { margin-right: 2px; }
-    .sudoku-cell:nth-child(n + 19):nth-child(-n + 27),
-    .sudoku-cell:nth-child(n + 46):nth-child(-n + 54) {
-      border-bottom: 2px solid #cfe0f2;
-    }
-
-    .leaderboard {
-      margin-top: 18px;
-      padding: 16px;
-      border-radius: 16px;
-      background: #f8faff;
-      border: 1px solid var(--line);
-    }
-    .leaderboard h3 { margin: 0 0 8px; }
-    .leaderboard-list { display: grid; gap: 7px; }
-    .hidden { display: none !important; }
-
-    @media (max-width: 700px) {
-      .app { padding: 14px; }
-      .topbar { padding: 12px 14px; }
-      .game-grid { grid-template-columns: 1fr 1fr; }
-      .card { padding: 18px; }
-    }
+    :root{--bg1:#eef4ff;--bg2:#eefaf4;--card:#fff;--line:#e6ebf3;--text:#1d2a3a;--muted:#63758b;--primary:#4d6ef3;--green:#22b66d;--red:#ea5a55;--gold:#a86d00;--shadow:0 16px 36px rgba(24,41,72,.10)}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100vh;background:linear-gradient(140deg,var(--bg1),var(--bg2));color:var(--text);font-family:"Segoe UI",Arial,"PingFang SC","Microsoft YaHei",sans-serif}body{overflow-x:hidden}.app{max-width:1220px;margin:0 auto;padding:22px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.9);border-radius:20px;box-shadow:var(--shadow);padding:14px 18px;position:sticky;top:10px;z-index:20;backdrop-filter:blur(10px)}.brand{font-size:clamp(1.6rem,2vw,2.2rem);font-weight:900;letter-spacing:.03em}.top-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.pill{min-width:145px;text-align:center;padding:10px 14px;border:1px solid #f1d289;border-radius:14px;background:#fff9ea;color:var(--gold);font-weight:800;white-space:nowrap}.timer-pill{min-width:84px;background:#fff;border-color:var(--line);color:var(--text)}.timer-pill.urgent{color:var(--red);border-color:#f0aaa6}.lang-wrap{position:relative}.lang-btn{min-width:118px;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:12px;padding:10px 14px;font-size:.98rem;font-weight:700;cursor:pointer}.lang-menu{position:absolute;right:0;top:calc(100% + 8px);min-width:170px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:6px;display:none;z-index:30}.lang-menu.open{display:grid}.lang-option{border:0;background:#fff;text-align:left;border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--text);font-weight:600}.lang-option:hover{background:#f3f6ff}
+    .page{display:none}.page.active{display:block;animation:fade .2s ease}@keyframes fade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}.card{padding:24px;border:1px solid var(--line);border-radius:22px;background:var(--card);box-shadow:var(--shadow)}.home-head,.panel-header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}.title{margin:0;font-size:clamp(2rem,4vw,3rem);font-weight:900}.player-box{display:flex;gap:16px;flex-wrap:wrap;background:linear-gradient(135deg,#f9fbff,#f2f6ff);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:20px}.field{flex:1;min-width:220px;display:flex;flex-direction:column;gap:7px}.field label,.difficulty label{color:var(--muted);font-weight:700}.field input,.answer-input,.difficulty select{width:100%;background:#fff;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:1rem;outline:none}.field input:focus,.answer-input:focus,.difficulty select:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(77,110,243,.08)}.game-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}.game-btn{width:100%;min-height:88px;border:0;border-radius:18px;color:#fff;font-size:1.04rem;font-weight:800;cursor:pointer;box-shadow:0 10px 20px rgba(26,45,90,.12);transition:transform .15s,filter .15s}.game-btn:hover{transform:translateY(-2px);filter:brightness(1.04)}.btn-blue{background:linear-gradient(135deg,#5575ff,#7d94ff)}.btn-green{background:linear-gradient(135deg,#22b66d,#33d188)}.btn-orange{background:linear-gradient(135deg,#f39a2c,#ffbb5c)}.btn-purple{background:linear-gradient(135deg,#815ef1,#aa82ff)}.btn-red{background:linear-gradient(135deg,#eb5a5a,#ff7f7b)}.btn-gold{background:linear-gradient(135deg,#cf931b,#efbe53)}
+    .header-left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.back-btn,.action-btn,.soft-btn{border:0;border-radius:12px;padding:11px 16px;font-weight:800;cursor:pointer;color:#fff}.back-btn{background:linear-gradient(135deg,#eb5a5a,#ff7b7b)}.action-btn.btn-green{background:linear-gradient(135deg,#1caf69,#2ad97d)}.action-btn.btn-blue{background:linear-gradient(135deg,#5575ff,#7d94ff)}.action-btn.btn-orange{background:linear-gradient(135deg,#ef9b30,#ffbd5d)}.action-btn.btn-red{background:linear-gradient(135deg,#eb5a5a,#ff7b7b)}.soft-btn{background:linear-gradient(135deg,#edf3ff,#eff5ff);color:var(--primary)}.mini-score{background:#fff9ea;border:1px solid #f1d089;border-radius:12px;padding:10px 12px;color:var(--gold);font-weight:800}.difficulty{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.difficulty select{min-width:190px}.question-box{min-height:90px;margin:15px 0 12px;padding:18px 16px;border:1px solid #e4ebff;background:#f8faff;border-radius:16px;font-size:clamp(1.1rem,2vw,1.4rem);line-height:1.55;font-weight:800;white-space:pre-wrap;word-break:break-word}.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.status{min-height:26px;margin-top:12px;font-weight:800}.status.success{color:var(--green)}.status.error{color:var(--red)}.status.info{color:var(--primary)}
+    .progress-mini{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:5px;margin:12px 0 8px;align-items:center}.dot{width:100%;aspect-ratio:1;border-radius:50%;background:#fff;border:1.5px solid #dfe7f3}.dot.correct{background:var(--green);border-color:#1ea764}.dot.wrong{background:var(--red);border-color:#d74e48}.leaderboard{margin-top:18px;padding:16px;border-radius:16px;background:#f8faff;border:1px solid var(--line)}.leaderboard h3{margin:0 0 8px}.leaderboard-list{display:grid;gap:7px}.multi-list{display:grid;gap:10px;margin:16px 0}.player-row{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:#fff}.player-head{display:flex;justify-content:space-between;gap:8px;font-weight:800;margin-bottom:8px}.mini-bar{height:8px;background:#edf0f6;border-radius:999px;overflow:hidden}.mini-fill{height:100%;width:0;background:linear-gradient(90deg,var(--primary),#3bc9a8);border-radius:inherit;transition:width .2s}.hidden{display:none!important}.sudoku-board{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:3px;max-width:430px;margin:16px auto;padding:7px;border:2px solid #ced9ee;border-radius:14px;background:#f7f9ff}.sudoku-cell{width:100%;aspect-ratio:1;border:1px solid #dfe7f2;border-radius:5px;background:#fff;text-align:center;font-size:1rem;font-weight:800;color:var(--text);outline:none}.sudoku-cell.fixed{background:#eef3ff;color:var(--muted)}
+    @media(max-width:700px){.app{padding:12px}.topbar{padding:11px 12px}.top-actions{gap:7px}.pill{min-width:auto;padding:9px 10px}.game-grid{grid-template-columns:1fr 1fr}.card{padding:16px}.progress-mini{gap:3px}.dot{border-width:1px}.difficulty{width:100%}.difficulty select{flex:1;min-width:0}}
   </style>
 </head>
 <body>
@@ -391,767 +20,135 @@
       <div class="brand" data-i18n="brand">数学乐园</div>
       <div class="top-actions">
         <div class="pill"><span data-i18n="totalScore">总积分</span>: <strong id="topScore">0</strong></div>
-        <div class="pill timer-pill"><span id="topTimer">40s</span></div>
-        <div class="lang-wrap">
-          <button class="lang-btn" id="langBtn" type="button" aria-expanded="false">
-            <span data-i18n="language">语言</span> ▾
-          </button>
-          <div class="lang-menu" id="langMenu" aria-label="Language menu"></div>
-        </div>
+        <div class="pill timer-pill" id="timerPill" aria-live="polite"><span id="topTimer">40s</span></div>
+        <div class="lang-wrap"><button class="lang-btn" id="langBtn" type="button" aria-expanded="false"><span data-i18n="language">语言</span> ▾</button><div class="lang-menu" id="langMenu" aria-label="Language menu"></div></div>
       </div>
     </header>
 
     <main>
       <section class="page active" id="homePage">
-        <div class="home-head">
-          <h1 class="title" data-i18n="homeTitle">数学益智乐园</h1>
-          <div class="pill"><span data-i18n="totalScore">总积分</span>: <strong id="homeScore">0</strong></div>
-        </div>
-
+        <div class="home-head"><h1 class="title" data-i18n="homeTitle">数学益智乐园</h1><div class="pill"><span data-i18n="totalScore">总积分</span>: <strong id="homeScore">0</strong></div></div>
         <div class="card">
           <div class="player-box">
-            <div class="field">
-              <label data-i18n="playerName">玩家名字</label>
-              <input id="playerName" type="text" maxlength="24" placeholder="请输入名字" />
-            </div>
-            <div class="field">
-              <label data-i18n="playerId">玩家 ID</label>
-              <input id="playerId" type="text" maxlength="20" placeholder="自定义 ID" />
-            </div>
+            <div class="field"><label data-i18n="playerName">玩家名字</label><input id="playerName" maxlength="24" type="text" placeholder="请输入名字"></div>
+            <div class="field"><label data-i18n="playerId">玩家 ID</label><input id="playerId" maxlength="20" type="text" placeholder="自定义 ID"></div>
           </div>
-
           <div class="game-grid">
             <button class="game-btn btn-blue" data-page="page24" data-i18n="game24">24 点</button>
             <button class="game-btn btn-green" data-page="pageCalc" data-i18n="gameCalc">口算</button>
             <button class="game-btn btn-orange" data-page="pageWord" data-i18n="gameWord">应用题</button>
             <button class="game-btn btn-purple" data-page="pageSudoku" data-i18n="gameSudoku">数独</button>
-            <button class="game-btn btn-gold" data-page="pageUltimate" id="ultimateBtn" data-i18n="ultimateBtn">终极测试</button>
+            <button class="game-btn btn-red" data-page="pageMulti" data-i18n="gameMulti">多人 BOT 对战</button>
+            <button class="game-btn btn-gold" data-page="pageUltimate" id="ultimateBtn" data-i18n="ultimateBtn">终极测试（40分解锁）</button>
           </div>
-
-          <div class="leaderboard" id="leaderboardBox">
-            <h3 data-i18n="rankTitle">排行榜</h3>
-            <div class="leaderboard-list" id="leaderboardList"></div>
-          </div>
+          <div class="leaderboard"><h3 data-i18n="rankTitle">排行榜</h3><div class="leaderboard-list" id="leaderboardList"></div></div>
         </div>
       </section>
 
       <section class="page" id="page24">
-        <div class="panel-header">
-          <div class="header-left">
-            <button class="back-btn" data-back="home" data-i18n="homeBtn">返回主页</button>
-            <div class="mini-score"><span data-i18n="singleScore">单项积分</span>: <strong id="score24">0</strong></div>
-          </div>
-          <div class="difficulty">
-            <span data-i18n="difficulty">难度</span>
-            <select id="diff24"></select>
-          </div>
-        </div>
-        <div class="card">
-          <div class="progress-mini" id="progress24"></div>
-          <div class="question-box" id="q24">题目：--</div>
-          <input class="answer-input" id="ans24" type="text" placeholder="输入算式" />
-          <div class="controls">
-            <button class="action-btn btn-green" id="submit24Btn" data-i18n="submitBtn">提交答案</button>
-            <button class="action-btn btn-blue" id="next24Btn" data-i18n="nextBtn">下一题</button>
-            <button class="action-btn btn-orange" id="show24Btn" data-i18n="showAnswerBtn">查看答案</button>
-          </div>
-          <div class="status" id="msg24"></div>
-          <div class="status info" id="show24Answer"></div>
-          <div class="status info" id="timer24"></div>
-        </div>
+        <div class="panel-header"><div class="header-left"><button class="back-btn" data-back="home" data-i18n="homeBtn">返回主页</button><div class="mini-score"><span data-i18n="singleScore">单项积分</span>: <strong id="score24">0</strong></div></div><div class="difficulty"><label data-i18n="difficulty">难度</label><select id="diff24"></select></div></div>
+        <div class="card"><div class="progress-mini" id="progress24"></div><div class="question-box" id="q24">题目：--</div><input class="answer-input" id="ans24" type="text" data-placeholder="formulaPlaceholder"><div class="controls"><button class="action-btn btn-green" id="submit24Btn" data-i18n="submitBtn">提交答案</button><button class="action-btn btn-blue" id="next24Btn" data-i18n="nextBtn">下一题</button><button class="action-btn btn-orange" id="show24Btn" data-i18n="showAnswerBtn">查看答案</button></div><div class="status" id="msg24"></div><div class="status info" id="show24Answer"></div></div>
       </section>
 
       <section class="page" id="pageCalc">
-        <div class="panel-header">
-          <div class="header-left">
-            <button class="back-btn" data-back="home" data-i18n="homeBtn">返回主页</button>
-            <div class="mini-score"><span data-i18n="singleScore">单项积分</span>: <strong id="scoreCalc">0</strong></div>
-          </div>
-          <div class="difficulty">
-            <span data-i18n="difficulty">难度</span>
-            <select id="diffCalc"></select>
-          </div>
-        </div>
-        <div class="card">
-          <div class="progress-mini" id="progressCalc"></div>
-          <div class="question-box" id="qCalc">题目：--</div>
-          <input class="answer-input" id="ansCalc" type="number" step="any" placeholder="输入答案" />
-          <div class="controls">
-            <button class="action-btn btn-green" id="submitCalcBtn" data-i18n="submitBtn">提交答案</button>
-            <button class="action-btn btn-blue" id="nextCalcBtn" data-i18n="nextBtn">下一题</button>
-            <button class="action-btn btn-orange" id="showCalcBtn" data-i18n="showAnswerBtn">查看答案</button>
-          </div>
-          <div class="status" id="msgCalc"></div>
-          <div class="status info" id="showCalcAnswer"></div>
-          <div class="status info" id="timerCalc"></div>
-        </div>
+        <div class="panel-header"><div class="header-left"><button class="back-btn" data-back="home" data-i18n="homeBtn">返回主页</button><div class="mini-score"><span data-i18n="singleScore">单项积分</span>: <strong id="scoreCalc">0</strong></div></div><div class="difficulty"><label data-i18n="difficulty">难度</label><select id="diffCalc"></select></div></div>
+        <div class="card"><div class="progress-mini" id="progressCalc"></div><div class="question-box" id="qCalc">题目：--</div><input class="answer-input" id="ansCalc" type="number" step="any" data-placeholder="answerPlaceholder"><div class="controls"><button class="action-btn btn-green" id="submitCalcBtn" data-i18n="submitBtn">提交答案</button><button class="action-btn btn-blue" id="nextCalcBtn" data-i18n="nextBtn">下一题</button><button class="action-btn btn-orange" id="showCalcBtn" data-i18n="showAnswerBtn">查看答案</button></div><div class="status" id="msgCalc"></div><div class="status info" id="showCalcAnswer"></div></div>
       </section>
 
       <section class="page" id="pageWord">
-        <div class="panel-header">
-          <div class="header-left">
-            <button class="back-btn" data-back="home" data-i18n="homeBtn">返回主页</button>
-            <div class="mini-score"><span data-i18n="singleScore">单项积分</span>: <strong id="scoreWord">0</strong></div>
-          </div>
-          <div class="difficulty">
-            <span data-i18n="difficulty">难度</span>
-            <select id="diffWord"></select>
-          </div>
-        </div>
-        <div class="card">
-          <div class="progress-mini" id="progressWord"></div>
-          <div class="question-box" id="qWord">题目：--</div>
-          <input class="answer-input" id="ansWord" type="number" step="any" placeholder="输入答案" />
-          <div class="controls">
-            <button class="action-btn btn-green" id="submitWordBtn" data-i18n="submitBtn">提交答案</button>
-            <button class="action-btn btn-blue" id="nextWordBtn" data-i18n="nextBtn">下一题</button>
-            <button class="action-btn btn-orange" id="showWordBtn" data-i18n="showAnswerBtn">查看答案</button>
-          </div>
-          <div class="status" id="msgWord"></div>
-          <div class="status info" id="showWordAnswer"></div>
-          <div class="status info" id="timerWord"></div>
-        </div>
+        <div class="panel-header"><div class="header-left"><button class="back-btn" data-back="home" data-i18n="homeBtn">返回主页</button><div class="mini-score"><span data-i18n="singleScore">单项积分</span>: <strong id="scoreWord">0</strong></div></div><div class="difficulty"><label data-i18n="difficulty">难度</label><select id="diffWord"></select></div></div>
+        <div class="card"><div class="progress-mini" id="progressWord"></div><div class="question-box" id="qWord">题目：--</div><input class="answer-input" id="ansWord" type="number" step="any" data-placeholder="answerPlaceholder"><div class="controls"><button class="action-btn btn-green" id="submitWordBtn" data-i18n="submitBtn">提交答案</button><button class="action-btn btn-blue" id="nextWordBtn" data-i18n="nextBtn">下一题</button><button class="action-btn btn-orange" id="showWordBtn" data-i18n="showAnswerBtn">查看答案</button></div><div class="status" id="msgWord"></div><div class="status info" id="showWordAnswer"></div></div>
       </section>
 
       <section class="page" id="pageSudoku">
-        <div class="panel-header">
-          <div class="header-left">
-            <button class="back-btn" data-back="home" data-i18n="homeBtn">返回主页</button>
-            <div class="mini-score"><span data-i18n="singleScore">单项积分</span>: <strong id="scoreSudoku">0</strong></div>
-          </div>
-          <div class="difficulty">
-            <span data-i18n="difficulty">难度</span>
-            <select id="diffSudoku"></select>
-          </div>
-        </div>
+        <div class="panel-header"><div class="header-left"><button class="back-btn" data-back="home" data-i18n="homeBtn">返回主页</button><div class="mini-score"><span data-i18n="singleScore">单项积分</span>: <strong id="scoreSudoku">0</strong></div></div><div class="difficulty"><label data-i18n="difficulty">难度</label><select id="diffSudoku"></select></div></div>
+        <div class="card"><div class="progress-mini" id="progressSudoku"></div><div class="sudoku-board" id="sudokuBoard"></div><div class="controls"><button class="action-btn btn-green" id="checkSudokuBtn" data-i18n="checkBtn">检查答案</button><button class="action-btn btn-blue" id="newSudokuBtn" data-i18n="newSudokuBtn">新数独</button></div><div class="status" id="msgSudoku"></div></div>
+      </section>
+
+      <section class="page" id="pageMulti">
+        <div class="panel-header"><div class="header-left"><button class="back-btn" data-back="home" data-i18n="homeBtn">返回主页</button><div class="mini-score" data-i18n="botMatch">BOT 对战</div></div></div>
         <div class="card">
-          <div class="progress-mini" id="progressSudoku"></div>
-          <div id="sudokuBoard" class="sudoku-board"></div>
-          <div class="controls">
-            <button class="action-btn btn-green" id="checkSudokuBtn" data-i18n="checkBtn">检查答案</button>
-            <button class="action-btn btn-blue" id="newSudokuBtn" data-i18n="newSudokuBtn">新数独</button>
-            <button class="soft-btn" id="retrySudokuBtn" data-i18n="retryBtn">错题重做</button>
+          <div class="controls" style="margin-top:0">
+            <div class="difficulty"><label data-i18n="questionType">题型</label><select id="multiType"></select></div>
+            <div class="difficulty"><label data-i18n="difficulty">难度</label><select id="multiDifficulty"></select></div>
           </div>
-          <div class="status" id="msgSudoku"></div>
-          <div class="status info" id="timerSudoku"></div>
+          <div class="controls"><button class="action-btn btn-blue" id="addBotBtn" data-i18n="addBotBtn">添加 Bot</button><button class="action-btn btn-red" id="clearPlayersBtn" data-i18n="clearBtn">清空</button><button class="action-btn btn-green" id="startMultiBtn" data-i18n="startBtn">开始</button></div>
+          <div class="multi-list" id="multiPlayers"></div>
+          <div class="progress-mini" id="progressMulti"></div>
+          <div class="question-box" id="multiQuestion">题目：--</div>
+          <input class="answer-input" id="multiAns" type="number" step="any" data-placeholder="answerPlaceholder">
+          <div class="controls"><button class="action-btn btn-green" id="submitMultiBtn" data-i18n="submitBtn">提交答案</button><button class="action-btn btn-blue" id="nextMultiBtn" data-i18n="nextBtn">下一题</button></div>
+          <div class="status" id="msgMulti"></div>
+          <div class="leaderboard hidden" id="rankBox"></div>
         </div>
       </section>
 
       <section class="page" id="pageUltimate">
-        <div class="panel-header">
-          <div class="header-left">
-            <button class="back-btn" data-back="home" data-i18n="homeBtn">返回主页</button>
-            <div class="mini-score"><span data-i18n="ultimateScore">终极测试</span>: <strong id="scoreUltimate">0</strong></div>
-          </div>
-          <div class="difficulty">
-            <span data-i18n="difficulty">难度</span>
-            <select id="diffUltimate"></select>
-          </div>
-        </div>
-        <div class="card">
-          <div class="progress-mini" id="progressUltimate"></div>
-          <div class="question-box" id="qUltimate">题目：--</div>
-          <input class="answer-input" id="ansUltimate" type="number" step="any" placeholder="输入答案" />
-          <div class="controls">
-            <button class="action-btn btn-green" id="submitUltimateBtn" data-i18n="submitBtn">提交答案</button>
-            <button class="action-btn btn-blue" id="nextUltimateBtn" data-i18n="nextBtn">下一题</button>
-            <button class="action-btn btn-orange" id="showUltimateBtn" data-i18n="showAnswerBtn">查看答案</button>
-          </div>
-          <div class="status" id="msgUltimate"></div>
-          <div class="status info" id="showUltimateAnswer"></div>
-          <div class="status info" id="timerUltimate"></div>
-        </div>
+        <div class="panel-header"><div class="header-left"><button class="back-btn" data-back="home" data-i18n="homeBtn">返回主页</button><div class="mini-score"><span data-i18n="ultimateScore">终极测试</span>: <strong id="scoreUltimate">0</strong></div></div><div class="difficulty"><label data-i18n="difficulty">难度</label><select id="diffUltimate" disabled aria-label="Hardest difficulty"></select></div></div>
+        <div class="card"><div class="progress-mini" id="progressUltimate"></div><div class="question-box" id="qUltimate">题目：--</div><input class="answer-input" id="ansUltimate" type="number" step="any" data-placeholder="answerPlaceholder"><div class="controls"><button class="action-btn btn-green" id="submitUltimateBtn" data-i18n="submitBtn">提交答案</button><button class="action-btn btn-blue" id="nextUltimateBtn" data-i18n="nextBtn">下一题</button><button class="action-btn btn-orange" id="showUltimateBtn" data-i18n="showAnswerBtn">查看答案</button></div><div class="status" id="msgUltimate"></div><div class="status info" id="showUltimateAnswer"></div></div>
       </section>
     </main>
   </div>
 
   <script>
-    const SAVE_KEY = 'mathgame_park_v3';
-    const LANGS = { zh: '中文', en: 'English', es: 'Español', ja: '日本語', ko: '한국어', fr: 'Français' };
-    const T = {
-      zh: {
-        brand: '数学乐园', language: '语言', totalScore: '总积分', homeTitle: '数学益智乐园',
-        playerName: '玩家名字', playerId: '玩家 ID', game24: '24 点', gameCalc: '口算', gameWord: '应用题',
-        gameSudoku: '数独', ultimateBtn: '终极测试', homeBtn: '返回主页', singleScore: '单项积分',
-        difficulty: '难度', submitBtn: '提交答案', nextBtn: '下一题', showAnswerBtn: '查看答案',
-        checkBtn: '检查答案', newSudokuBtn: '新数独', retryBtn: '错题重做', rankTitle: '排行榜',
-        multiRank: '排行', ultimateScore: '终极测试', correct: '答对！', wrong: '答案错误，再试一次。',
-        invalid: '请输入有效答案。', need40: '总积分达到 40 分后方可开启终极测试。', timeUp: '时间到！',
-        invalid24: '组合必须使用四个数并得到 24。', invalidFormula: '算式无效。', answerIs: '答案是：',
-        noRetry: '当前没有错题可重做。', retryQueue: '已加入错题重做队列。', sudokuRule: '每行、每列、每个 3×3 宫必须是 1~9 且不重复。',
-        sudokuIncomplete: '请先把空格填完整。', sudokuWrong: '数独还不正确。', sudokuCorrect: '数独正确！',
-        noPlayers: '请先添加玩家。', finalRank: '最终排名', bot: 'Bot', score: '分数', you: '你', rank: '排名',
-        easy: '简单 (+3)', normal: '中等 (+6)', hard: '困难 (+10)', devil: '极限 (+18)'
-      },
-      en: {
-        brand: 'Math Puzzle Park', language: 'Language', totalScore: 'Total Score', homeTitle: 'Math Puzzle Park',
-        playerName: 'Player Name', playerId: 'Player ID', game24: '24 Game', gameCalc: 'Mental Math', gameWord: 'Word Problems',
-        gameSudoku: 'Sudoku', ultimateBtn: 'Ultimate Test', homeBtn: 'Home', singleScore: 'Score', difficulty: 'Difficulty',
-        submitBtn: 'Submit', nextBtn: 'Next', showAnswerBtn: 'Show Answer', checkBtn: 'Check', newSudokuBtn: 'New Sudoku',
-        retryBtn: 'Retry Mistakes', rankTitle: 'Leaderboard', multiRank: 'Rank', ultimateScore: 'Ultimate', correct: 'Correct!',
-        wrong: 'Wrong answer. Try again.', invalid: 'Please enter a valid answer.', need40: 'Reach 40 total points to unlock the ultimate test.',
-        timeUp: 'Time is up!', invalid24: 'Use the four numbers exactly once and reach 24.', invalidFormula: 'Invalid formula.',
-        answerIs: 'Answer: ', noRetry: 'No retry questions right now.', retryQueue: 'Added to retry queue.',
-        sudokuRule: 'Each row, column, and 3×3 box must contain 1–9 without repetition.', sudokuIncomplete: 'Fill all blanks first.',
-        sudokuWrong: 'Sudoku is not correct yet.', sudokuCorrect: 'Sudoku correct!', noPlayers: 'Add players first.',
-        finalRank: 'Final Ranking', bot: 'Bot', score: 'Score', you: 'You', rank: 'Rank', easy: 'Easy (+3)',
-        normal: 'Normal (+6)', hard: 'Hard (+10)', devil: 'Extreme (+18)'
-      },
-      es: {
-        brand: 'Parque de Matemáticas', language: 'Idioma', totalScore: 'Puntuación Total', homeTitle: 'Parque de Matemáticas',
-        playerName: 'Nombre del jugador', playerId: 'ID del jugador', game24: 'Juego 24', gameCalc: 'Cálculo mental', gameWord: 'Problemas',
-        gameSudoku: 'Sudoku', ultimateBtn: 'Prueba final', homeBtn: 'Inicio', singleScore: 'Puntuación', difficulty: 'Dificultad',
-        submitBtn: 'Enviar', nextBtn: 'Siguiente', showAnswerBtn: 'Mostrar respuesta', checkBtn: 'Comprobar', newSudokuBtn: 'Nuevo Sudoku',
-        retryBtn: 'Reintentar fallos', rankTitle: 'Clasificación', multiRank: 'Ranking', ultimateScore: 'Final', correct: '¡Correcto!',
-        wrong: 'Respuesta incorrecta.', invalid: 'Introduce una respuesta válida.', need40: 'Consigue 40 puntos para desbloquear la prueba final.',
-        timeUp: '¡Se acabó el tiempo!', invalid24: 'Usa cada uno de los cuatro números y obtén 24.', invalidFormula: 'Fórmula no válida.',
-        answerIs: 'Respuesta: ', noRetry: 'No hay preguntas fallidas para repetir.', retryQueue: 'Añadido a la cola de repaso.',
-        sudokuRule: 'Cada fila, columna y bloque 3×3 debe contener 1–9 sin repetir.', sudokuIncomplete: 'Primero completa todas las casillas vacías.',
-        sudokuWrong: 'El Sudoku aún no es correcto.', sudokuCorrect: '¡Sudoku correcto!', noPlayers: 'Primero añade jugadores.',
-        finalRank: 'Clasificación final', bot: 'Bot', score: 'Puntuación', you: 'Tú', rank: 'Puesto', easy: 'Fácil (+3)',
-        normal: 'Normal (+6)', hard: 'Difícil (+10)', devil: 'Extremo (+18)'
-      },
-      ja: {
-        brand: '数学パズルパーク', language: '言語', totalScore: '合計スコア', homeTitle: '数学パズルパーク',
-        playerName: 'プレイヤー名', playerId: 'プレイヤー ID', game24: '24ゲーム', gameCalc: '暗算', gameWord: '文章題',
-        gameSudoku: '数独', ultimateBtn: '最終テスト', homeBtn: 'ホーム', singleScore: 'スコア', difficulty: '難易度',
-        submitBtn: '回答する', nextBtn: '次の問題', showAnswerBtn: '答えを見る', checkBtn: '確認', newSudokuBtn: '新しい数独',
-        retryBtn: '間違えた問題をやり直す', rankTitle: 'ランキング', multiRank: '順位', ultimateScore: '最終テスト',
-        correct: '正解！', wrong: '不正解です。', invalid: '有効な答えを入力してください。', need40: '合計40点で最終テストが解放されます。',
-        timeUp: '時間切れ。', invalid24: '4つの数字を1回ずつ使って24にしてください。', invalidFormula: '式が無効です。',
-        answerIs: '答え: ', noRetry: 'やり直す問題がありません。', retryQueue: '誤答問題を再挑戦に追加しました。',
-        sudokuRule: '各行・列・3×3ブロックに1〜9が重複なく入ります。', sudokuIncomplete: '空欄をすべて埋めてください。',
-        sudokuWrong: '数独がまだ正しくありません。', sudokuCorrect: '数独正解！', noPlayers: 'まずプレイヤーを追加してください。',
-        finalRank: '最終順位', bot: 'ボット', score: 'スコア', you: 'あなた', rank: '順位', easy: '簡単 (+3)',
-        normal: '普通 (+6)', hard: '難しい (+10)', devil: '極限 (+18)'
-      },
-      ko: {
-        brand: '수학 퍼즐 파크', language: '언어', totalScore: '총점', homeTitle: '수학 퍼즐 파크',
-        playerName: '플레이어 이름', playerId: '플레이어 ID', game24: '24 게임', gameCalc: '암산', gameWord: '응용 문제',
-        gameSudoku: '스도쿠', ultimateBtn: '최종 테스트', homeBtn: '홈', singleScore: '점수', difficulty: '난이도',
-        submitBtn: '답 제출', nextBtn: '다음', showAnswerBtn: '정답 보기', checkBtn: '확인', newSudokuBtn: '새 스도쿠',
-        retryBtn: '오답 다시 풀기', rankTitle: '순위', multiRank: '순위', ultimateScore: '최종 테스트', correct: '정답!',
-        wrong: '오답입니다.', invalid: '올바른 답을 입력하세요.', need40: '총점 40점 달성 시 최종 테스트가 해제됩니다.',
-        timeUp: '시간 초과.', invalid24: '네 숫자를 각각 한 번씩 사용해 24를 만들세요.', invalidFormula: '식이 올바르지 않습니다.',
-        answerIs: '정답: ', noRetry: '다시 푸는 문제 없음.', retryQueue: '오답 문제를 다시 풀 수 있게 추가했습니다.',
-        sudokuRule: '각 행, 열, 3×3칸에는 1~9가 중복 없이 들어가야 합니다.', sudokuIncomplete: '빈칸을 먼저 채워 주세요.',
-        sudokuWrong: '스도쿠가 아직 틀렸습니다.', sudokuCorrect: '스도쿠 정답!', noPlayers: '먼저 플레이어를 추가하세요.',
-        finalRank: '최종 순위', bot: '봇', score: '점수', you: '나', rank: '순위', easy: '쉬움 (+3)',
-        normal: '보통 (+6)', hard: '어려움 (+10)', devil: '극한 (+18)'
-      },
-      fr: {
-        brand: 'Parc de mathématiques', language: 'Langue', totalScore: 'Score total', homeTitle: 'Parc de mathématiques',
-        playerName: 'Nom du joueur', playerId: 'ID du joueur', game24: 'Jeu du 24', gameCalc: 'Calcul mental', gameWord: 'Problèmes',
-        gameSudoku: 'Sudoku', ultimateBtn: 'Test final', homeBtn: 'Accueil', singleScore: 'Score', difficulty: 'Difficulté',
-        submitBtn: 'Valider', nextBtn: 'Suivant', showAnswerBtn: 'Voir la réponse', checkBtn: 'Vérifier', newSudokuBtn: 'Nouveau Sudoku',
-        retryBtn: 'Rejouer les erreurs', rankTitle: 'Classement', multiRank: 'Classement', ultimateScore: 'Final', correct: 'Bonne réponse !',
-        wrong: 'Réponse incorrecte.', invalid: 'Saisissez une réponse valide.', need40: 'Atteignez 40 points pour débloquer le test final.',
-        timeUp: 'Temps écoulé !', invalid24: 'Utilisez les quatre nombres exactement une fois pour obtenir 24.', invalidFormula: 'Formule invalide.',
-        answerIs: 'Réponse : ', noRetry: 'Aucune question à recommencer.', retryQueue: 'Question ajoutée à la file de reprise.',
-        sudokuRule: 'Chaque ligne, colonne et bloc 3×3 doit contenir 1–9 sans répétition.', sudokuIncomplete: 'Complétez d’abord toutes les cases.',
-        sudokuWrong: 'Le Sudoku n’est pas correct.', sudokuCorrect: 'Sudoku correct !', noPlayers: 'Ajoutez d’abord des joueurs.',
-        finalRank: 'Classement final', bot: 'Bot', score: 'Score', you: 'Vous', rank: 'Classement', easy: 'Facile (+3)',
-        normal: 'Moyen (+6)', hard: 'Difficile (+10)', devil: 'Extrême (+18)'
-      }
+    const SAVE_KEY='mathgame_park_v1';
+    const LANGS={zh:'中文',en:'English',es:'Español',ja:'日本語',ko:'한국어',fr:'Français'};
+    const LEVELS=['easy','normal','hard','devil'];
+    const T={
+      zh:{brand:'数学乐园',language:'语言',totalScore:'总积分',homeTitle:'数学益智乐园',playerName:'玩家名字',playerId:'玩家 ID',game24:'24 点',gameCalc:'口算',gameWord:'应用题',gameSudoku:'数独',gameMulti:'多人 BOT 对战',ultimateBtn:'终极测试（40分解锁）',homeBtn:'返回主页',singleScore:'单项积分',difficulty:'难度',questionType:'题型',submitBtn:'提交答案',nextBtn:'下一题',showAnswerBtn:'查看答案',checkBtn:'检查答案',newSudokuBtn:'新数独',addBotBtn:'添加 Bot',clearBtn:'清空',startBtn:'开始',rankTitle:'排行榜',botMatch:'BOT 对战',correct:'答对！',wrong:'答案错误，再试一次。',invalid:'请输入有效答案。',need40:'总积分达到 40 分后方可开启终极测试。',timeUp:'时间到！',invalid24:'算式须使用题目中的四个数字各一次，且结果为 24。',invalidFormula:'算式格式无效。',answerIs:'答案是：',sudokuRule:'每行、每列、每个 3×3 宫必须是 1~9 且不重复。',sudokuIncomplete:'请先把空格填完整。',sudokuWrong:'数独还不正确。',sudokuCorrect:'数独正确！',finalRank:'最终排名',score:'分数',you:'你',easy:'简单 (+3)',normal:'中等 (+6)',hard:'困难 (+10)',devil:'极限 (+18)',answerPlaceholder:'输入答案',formulaPlaceholder:'输入算式',type24:'24 点',typeCalc:'口算',typeWord:'应用题',emptyBots:'请至少添加一个 Bot。',bot:'Bot',roundDone:'本轮结束！',progressLabel:'题目进度'},
+      en:{brand:'Math Puzzle Park',language:'Language',totalScore:'Total Score',homeTitle:'Math Puzzle Park',playerName:'Player Name',playerId:'Player ID',game24:'24 Game',gameCalc:'Mental Math',gameWord:'Word Problems',gameSudoku:'Sudoku',gameMulti:'Bot Match',ultimateBtn:'Ultimate Test (40 to unlock)',homeBtn:'Home',singleScore:'Score',difficulty:'Difficulty',questionType:'Question type',submitBtn:'Submit',nextBtn:'Next',showAnswerBtn:'Show Answer',checkBtn:'Check',newSudokuBtn:'New Sudoku',addBotBtn:'Add Bot',clearBtn:'Clear',startBtn:'Start',rankTitle:'Leaderboard',botMatch:'BOT Match',correct:'Correct!',wrong:'Wrong answer. Try again.',invalid:'Please enter a valid answer.',need40:'Reach 40 total points to unlock the ultimate test.',timeUp:'Time is up!',invalid24:'Use each of the four numbers once and make 24.',invalidFormula:'Invalid formula.',answerIs:'Answer: ',sudokuRule:'Each row, column, and 3×3 box must contain 1–9 without repetition.',sudokuIncomplete:'Fill all blanks first.',sudokuWrong:'Sudoku is not correct yet.',sudokuCorrect:'Sudoku correct!',finalRank:'Final ranking',score:'Score',you:'You',easy:'Easy (+3)',normal:'Normal (+6)',hard:'Hard (+10)',devil:'Extreme (+18)',answerPlaceholder:'Enter answer',formulaPlaceholder:'Enter formula',type24:'24 Game',typeCalc:'Mental math',typeWord:'Word problem',emptyBots:'Add at least one Bot.',bot:'Bot',roundDone:'Round complete!',progressLabel:'Question progress'},
+      es:{brand:'Parque de Matemáticas',language:'Idioma',totalScore:'Puntuación total',homeTitle:'Parque de Matemáticas',playerName:'Nombre del jugador',playerId:'ID del jugador',game24:'Juego 24',gameCalc:'Cálculo mental',gameWord:'Problemas',gameSudoku:'Sudoku',gameMulti:'Partida con bots',ultimateBtn:'Prueba final (40 para desbloquear)',homeBtn:'Inicio',singleScore:'Puntuación',difficulty:'Dificultad',questionType:'Tipo de pregunta',submitBtn:'Enviar',nextBtn:'Siguiente',showAnswerBtn:'Mostrar respuesta',checkBtn:'Comprobar',newSudokuBtn:'Nuevo Sudoku',addBotBtn:'Añadir bot',clearBtn:'Limpiar',startBtn:'Iniciar',rankTitle:'Clasificación',botMatch:'Partida BOT',correct:'¡Correcto!',wrong:'Respuesta incorrecta.',invalid:'Introduce una respuesta válida.',need40:'Consigue 40 puntos para desbloquear la prueba final.',timeUp:'¡Se acabó el tiempo!',invalid24:'Usa cada uno de los cuatro números una vez para obtener 24.',invalidFormula:'Fórmula no válida.',answerIs:'Respuesta: ',sudokuRule:'Cada fila, columna y bloque 3×3 debe contener 1–9 sin repetir.',sudokuIncomplete:'Completa primero las casillas vacías.',sudokuWrong:'El Sudoku aún no es correcto.',sudokuCorrect:'¡Sudoku correcto!',finalRank:'Clasificación final',score:'Puntuación',you:'Tú',easy:'Fácil (+3)',normal:'Normal (+6)',hard:'Difícil (+10)',devil:'Extremo (+18)',answerPlaceholder:'Introduce la respuesta',formulaPlaceholder:'Introduce la fórmula',type24:'Juego 24',typeCalc:'Cálculo mental',typeWord:'Problema',emptyBots:'Añade al menos un bot.',bot:'Bot',roundDone:'¡Ronda completa!',progressLabel:'Progreso de preguntas'},
+      ja:{brand:'数学パズルパーク',language:'言語',totalScore:'合計スコア',homeTitle:'数学パズルパーク',playerName:'プレイヤー名',playerId:'プレイヤー ID',game24:'24ゲーム',gameCalc:'暗算',gameWord:'文章題',gameSudoku:'数独',gameMulti:'ボット対戦',ultimateBtn:'最終テスト（40点で解放）',homeBtn:'ホーム',singleScore:'スコア',difficulty:'難易度',questionType:'問題の種類',submitBtn:'回答する',nextBtn:'次の問題',showAnswerBtn:'答えを見る',checkBtn:'確認',newSudokuBtn:'新しい数独',addBotBtn:'ボット追加',clearBtn:'クリア',startBtn:'開始',rankTitle:'ランキング',botMatch:'BOT対戦',correct:'正解！',wrong:'不正解です。',invalid:'有効な答えを入力してください。',need40:'合計40点で最終テストが解放されます。',timeUp:'時間切れ！',invalid24:'4つの数字をそれぞれ1回使って24にしてください。',invalidFormula:'式が無効です。',answerIs:'答え: ',sudokuRule:'各行・列・3×3ブロックに1〜9が重複なく入ります。',sudokuIncomplete:'空欄をすべて埋めてください。',sudokuWrong:'数独がまだ正しくありません。',sudokuCorrect:'数独正解！',finalRank:'最終順位',score:'スコア',you:'あなた',easy:'簡単 (+3)',normal:'普通 (+6)',hard:'難しい (+10)',devil:'極限 (+18)',answerPlaceholder:'答えを入力',formulaPlaceholder:'式を入力',type24:'24ゲーム',typeCalc:'暗算',typeWord:'文章題',emptyBots:'ボットを1人以上追加してください。',bot:'ボット',roundDone:'ラウンド終了！',progressLabel:'問題の進捗'},
+      ko:{brand:'수학 퍼즐 파크',language:'언어',totalScore:'총점',homeTitle:'수학 퍼즐 파크',playerName:'플레이어 이름',playerId:'플레이어 ID',game24:'24 게임',gameCalc:'암산',gameWord:'응용 문제',gameSudoku:'스도쿠',gameMulti:'봇 대결',ultimateBtn:'최종 테스트 (40점 해제)',homeBtn:'홈',singleScore:'점수',difficulty:'난이도',questionType:'문제 유형',submitBtn:'답 제출',nextBtn:'다음',showAnswerBtn:'정답 보기',checkBtn:'확인',newSudokuBtn:'새 스도쿠',addBotBtn:'봇 추가',clearBtn:'초기화',startBtn:'시작',rankTitle:'순위',botMatch:'봇 대결',correct:'정답!',wrong:'오답입니다.',invalid:'올바른 답을 입력하세요.',need40:'총점 40점 달성 시 최종 테스트가 해제됩니다.',timeUp:'시간 초과!',invalid24:'네 숫자를 각각 한 번씩 사용해 24를 만드세요.',invalidFormula:'식이 올바르지 않습니다.',answerIs:'정답: ',sudokuRule:'각 행, 열, 3×3칸에는 1~9가 중복 없이 들어가야 합니다.',sudokuIncomplete:'빈칸을 먼저 채워 주세요.',sudokuWrong:'스도쿠가 아직 틀렸습니다.',sudokuCorrect:'스도쿠 정답!',finalRank:'최종 순위',score:'점수',you:'나',easy:'쉬움 (+3)',normal:'보통 (+6)',hard:'어려움 (+10)',devil:'극한 (+18)',answerPlaceholder:'답 입력',formulaPlaceholder:'식 입력',type24:'24 게임',typeCalc:'암산',typeWord:'응용 문제',emptyBots:'봇을 하나 이상 추가하세요.',bot:'봇',roundDone:'라운드 완료!',progressLabel:'문제 진행'},
+      fr:{brand:'Parc de mathématiques',language:'Langue',totalScore:'Score total',homeTitle:'Parc de mathématiques',playerName:'Nom du joueur',playerId:'ID du joueur',game24:'Jeu du 24',gameCalc:'Calcul mental',gameWord:'Problèmes',gameSudoku:'Sudoku',gameMulti:'Partie contre bots',ultimateBtn:'Test final (40 pour débloquer)',homeBtn:'Accueil',singleScore:'Score',difficulty:'Difficulté',questionType:'Type de question',submitBtn:'Valider',nextBtn:'Suivant',showAnswerBtn:'Voir la réponse',checkBtn:'Vérifier',newSudokuBtn:'Nouveau Sudoku',addBotBtn:'Ajouter un bot',clearBtn:'Effacer',startBtn:'Commencer',rankTitle:'Classement',botMatch:'Match contre BOT',correct:'Bonne réponse !',wrong:'Réponse incorrecte.',invalid:'Saisissez une réponse valide.',need40:'Atteignez 40 points pour débloquer le test final.',timeUp:'Temps écoulé !',invalid24:'Utilisez chacun des quatre nombres une fois pour obtenir 24.',invalidFormula:'Formule invalide.',answerIs:'Réponse : ',sudokuRule:'Chaque ligne, colonne et bloc 3×3 doit contenir 1–9 sans répétition.',sudokuIncomplete:'Complétez d’abord toutes les cases.',sudokuWrong:'Le Sudoku n’est pas correct.',sudokuCorrect:'Sudoku correct !',finalRank:'Classement final',score:'Score',you:'Vous',easy:'Facile (+3)',normal:'Moyen (+6)',hard:'Difficile (+10)',devil:'Extrême (+18)',answerPlaceholder:'Saisir la réponse',formulaPlaceholder:'Saisir la formule',type24:'Jeu du 24',typeCalc:'Calcul mental',typeWord:'Problème',emptyBots:'Ajoutez au moins un bot.',bot:'Bot',roundDone:'Manche terminée !',progressLabel:'Progression des questions'}
     };
-
-    const state = {
-      lang: 'zh',
-      totalScore: 0,
-      scores: { page24: 0, calc: 0, word: 0, sudoku: 0, ultimate: 0 },
-      playerName: '',
-      playerId: '',
-      page: 'homePage',
-      progress: { page24: [], calc: [], word: [], sudoku: [], ultimate: [] },
-      questions: { page24: null, calc: null, word: null, sudoku: null, ultimate: null },
-      timerId: null,
-      topTimer: 40,
-      currentTimerKey: null
-    };
-
-    const $ = id => document.getElementById(id);
-
-    function tr(key) {
-      return (T[state.lang] && T[state.lang][key]) || key;
-    }
-
-    function saveState() {
-      try {
-        localStorage.setItem(SAVE_KEY, JSON.stringify({
-          lang: state.lang,
-          totalScore: state.totalScore,
-          scores: state.scores,
-          playerName: state.playerName,
-          playerId: state.playerId
-        }));
-      } catch (e) {}
-    }
-
-    function loadState() {
-      try {
-        const raw = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
-        if (raw.lang && T[raw.lang]) state.lang = raw.lang;
-        state.totalScore = Number(raw.totalScore || 0);
-        state.scores = { ...state.scores, ...(raw.scores || {}) };
-        state.playerName = raw.playerName || '';
-        state.playerId = raw.playerId || '';
-      } catch (e) {}
-    }
-
-    function setStatus(id, text, kind = '') {
-      const el = $(id);
-      if (!el) return;
-      el.textContent = text;
-      el.className = 'status' + (kind ? ' ' + kind : '');
-    }
-
-    function setLanguage(lang) {
-      state.lang = lang;
-      document.documentElement.lang = lang;
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.dataset.i18n;
-        if (T[lang] && T[lang][key]) el.textContent = T[lang][key];
-      });
-      $('playerName').placeholder = tr('playerName');
-      $('playerId').placeholder = tr('playerId');
-      saveState();
-    }
-
-    function renderLangMenu() {
-      const menu = $('langMenu');
-      menu.innerHTML = '';
-      Object.entries(LANGS).forEach(([code, label]) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'lang-option';
-        btn.textContent = label;
-        btn.addEventListener('click', () => {
-          setLanguage(code);
-          menu.classList.remove('open');
-          $('langBtn').setAttribute('aria-expanded', 'false');
-        });
-        menu.appendChild(btn);
-      });
-    }
-
-    function showPage(id) {
-      document.querySelectorAll('.page').forEach(page => page.classList.toggle('active', page.id === id));
-      state.page = id;
-    }
-
-    function updateScores() {
-      $('topScore').textContent = state.totalScore;
-      $('homeScore').textContent = state.totalScore;
-      for (const key of ['page24','calc','word','sudoku','ultimate']) {
-        const scoreKey = key === 'page24' ? 'page24' : key;
-        const el = $(key === 'page24' ? 'score24' : key === 'calc' ? 'scoreCalc' : key === 'word' ? 'scoreWord' : key === 'sudoku' ? 'scoreSudoku' : 'scoreUltimate');
-        if (el) el.textContent = state.scores[scoreKey] || 0;
-      }
-    }
-
-    function renderMiniProgress(containerId, arr) {
-      const container = $(containerId);
-      if (!container) return;
-      container.innerHTML = '';
-      const values = Array.isArray(arr) ? arr.slice(-20) : [];
-      while (values.length < 20) values.push('empty');
-      values.forEach(val => {
-        const d = document.createElement('div');
-        d.className = 'dot ' + (val === 'correct' ? 'correct' : val === 'wrong' ? 'wrong' : 'empty');
-        container.appendChild(d);
-      });
-    }
-
-    function markProgress(key, status) {
-      const list = state.progress[key] || [];
-      list.push(status);
-      if (list.length > 20) list.shift();
-      state.progress[key] = list;
-      renderMiniProgress('progress' + key.replace('page', '').replace('calc', 'Calc').replace('word', 'Word').replace('sudoku', 'Sudoku').replace('ultimate', 'Ultimate'), list);
-    }
-
-    function updateTopTimerText(value) {
-      const el = $('topTimer');
-      if (!el) return;
-      el.textContent = `${value}s`;
-    }
-
-    function clearTimer() {
-      if (state.timerId) clearInterval(state.timerId);
-      state.timerId = null;
-    }
-
-    function startTimer(seconds, onExpire) {
-      clearTimer();
-      state.topTimer = seconds;
-      updateTopTimerText(seconds);
-      const perGameTimer = (id) => {
-        const el = $(id);
-        if (el) el.textContent = `${seconds}s`;
-      };
-      perGameTimer('timer24');
-      perGameTimer('timerCalc');
-      perGameTimer('timerWord');
-      perGameTimer('timerSudoku');
-      perGameTimer('timerUltimate');
-
-      state.timerId = setInterval(() => {
-        state.topTimer -= 1;
-        updateTopTimerText(Math.max(0, state.topTimer));
-        if (state.topTimer <= 0) {
-          clearTimer();
-          if (onExpire) onExpire();
-          const text = tr('timeUp');
-          updateTopTimerText(text);
-          ['timer24', 'timerCalc', 'timerWord', 'timerSudoku', 'timerUltimate'].forEach(id => {
-            const el = $(id); if (el) el.textContent = text;
-          });
-        }
-      }, 1000);
-    }
-
-    function randomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function solve24(nums) {
-      const arr = nums.slice();
-      const evaluate = (values, expr) => {
-        if (values.length === 1) {
-          return Math.abs(values[0] - 24) < 1e-8 ? expr : null;
-        }
-        for (let i = 0; i < values.length; i++) {
-          for (let j = i + 1; j < values.length; j++) {
-            const rest = values.filter((_, idx) => idx !== i && idx !== j);
-            const a = values[i];
-            const b = values[j];
-            const candidates = [
-              [a + b, `(${expr} + ${b})`],
-              [a - b, `(${expr} - ${b})`],
-              [b - a, `(${b} - ${expr})`],
-              [a * b, `(${expr} * ${b})`],
-              [a / b, `(${expr} / ${b})`],
-              [b / a, `(${b} / ${expr})`]
-            ];
-            for (const [v, text] of candidates) {
-              if (!Number.isFinite(v)) continue;
-              const result = evaluate([...rest, v], text);
-              if (result) return result;
-            }
-          }
-        }
-        return null;
-      };
-      return evaluate(arr, arr[0]) || null;
-    }
-
-    function create24Question() {
-      let nums = [randomInt(1, 10), randomInt(1, 10), randomInt(1, 10), randomInt(1, 10)];
-      let answer = solve24(nums);
-      while (!answer) {
-        nums = [randomInt(1, 10), randomInt(1, 10), randomInt(1, 10), randomInt(1, 10)];
-        answer = solve24(nums);
-      }
-      state.questions.page24 = { nums, answer };
-      $('q24').textContent = `题目：${nums.join(' ')} = 24`;
-      $('ans24').value = '';
-      setStatus('msg24', '', '');
-      $('show24Answer').textContent = '';
-      startTimer(40, () => {
-        setStatus('msg24', tr('timeUp'), 'error');
-        markProgress('page24', 'wrong');
-      });
-    }
-
-    function createCalcQuestion() {
-      const level = $('diffCalc').value;
-      let q = '';
-      let answer = 0;
-      if (level === 'easy') {
-        const a = randomInt(5, 20); const b = randomInt(2, 15); q = `${a} + ${b}`; answer = a + b;
-      } else if (level === 'normal') {
-        const a = randomInt(12, 45); const b = randomInt(3, 12); q = `${a} × ${b}`; answer = a * b;
-      } else if (level === 'hard') {
-        const a = randomInt(15, 80); const b = randomInt(5, 25); const c = randomInt(2, 9); q = `(${a} - ${b}) × ${c}`; answer = (a - b) * c;
-      } else {
-        const a = randomInt(30, 120); const b = randomInt(7, 25); const c = randomInt(3, 12); q = `(${a} + ${b}) ÷ ${c}`; answer = Math.round((a + b) / c);
-      }
-      state.questions.calc = { answer };
-      $('qCalc').textContent = `题目：${q} = ?`;
-      $('ansCalc').value = '';
-      setStatus('msgCalc', '', '');
-      $('showCalcAnswer').textContent = '';
-      startTimer(40, () => {
-        setStatus('msgCalc', tr('timeUp'), 'error');
-        markProgress('calc', 'wrong');
-      });
-    }
-
-    function createWordQuestion() {
-      const level = $('diffWord').value;
-      let q = '';
-      let answer = 0;
-      if (level === 'easy') {
-        const a = randomInt(8, 30); const b = randomInt(2, 12); q = `一件商品原价 ${a} 元，打折后再减 ${b} 元，最后价格是多少？`; answer = a - b;
-      } else if (level === 'normal') {
-        const a = randomInt(5, 18); const b = randomInt(4, 20); q = `小明有 ${a} 个糖果，送给朋友 ${b} 个后还剩多少？`; answer = a - b;
-      } else if (level === 'hard') {
-        const a = randomInt(12, 60); const b = randomInt(3, 15); q = `${a} 个人分成 ${b} 组，每组多少人？`; answer = Math.round(a / b);
-      } else {
-        const a = randomInt(30, 90); const b = randomInt(4, 20); q = `一辆车每小时行驶 ${a} 公里，共行驶 ${b} 小时，距离是多少？`; answer = a * b;
-      }
-      state.questions.word = { answer };
-      $('qWord').textContent = `题目：${q}`;
-      $('ansWord').value = '';
-      setStatus('msgWord', '', '');
-      $('showWordAnswer').textContent = '';
-      startTimer(40, () => {
-        setStatus('msgWord', tr('timeUp'), 'error');
-        markProgress('word', 'wrong');
-      });
-    }
-
-    function buildSudoku() {
-      const board = $('sudokuBoard');
-      board.innerHTML = '';
-      const puzzle = [
-        [5,3,0,0,7,0,0,0,0],
-        [6,0,0,1,9,5,0,0,0],
-        [0,9,8,0,0,0,0,6,0],
-        [8,0,0,0,6,0,0,0,3],
-        [4,0,0,8,0,3,0,0,1],
-        [7,0,0,0,2,0,0,0,6],
-        [0,6,0,0,0,0,2,8,0],
-        [0,0,0,4,1,9,0,0,5],
-        [0,0,0,0,8,0,0,7,9]
-      ];
-      for (let row = 0; row < 9; row++) {
-        for (let col = 0; col < 9; col++) {
-          const input = document.createElement('input');
-          input.type = 'text';
-          input.maxLength = 1;
-          input.className = 'sudoku-cell';
-          if (puzzle[row][col]) {
-            input.value = String(puzzle[row][col]);
-            input.disabled = true;
-            input.classList.add('fixed');
-          }
-          input.addEventListener('input', () => {
-            input.value = input.value.replace(/[^1-9]/g, '').slice(0, 1);
-          });
-          board.appendChild(input);
-        }
-      }
-      setStatus('msgSudoku', tr('sudokuRule'), 'info');
-      startTimer(40, () => {
-        setStatus('msgSudoku', tr('timeUp'), 'error');
-        markProgress('sudoku', 'wrong');
-      });
-    }
-
-    function checkSudoku() {
-      const cells = [...document.querySelectorAll('.sudoku-cell')];
-      if (cells.some(cell => !cell.disabled && !cell.value)) {
-        setStatus('msgSudoku', tr('sudokuIncomplete'), 'error');
-        return;
-      }
-      const grid = [];
-      for (let i = 0; i < 9; i++) {
-        grid.push(cells.slice(i * 9, i * 9 + 9).map(el => Number(el.value || 0)));
-      }
-      const valid = (arr) => arr.length === 9 && new Set(arr).size === 9 && arr.every(n => n > 0);
-      const rows = grid.every(valid);
-      const cols = Array.from({ length: 9 }, (_, c) => grid.map(r => r[c])).every(valid);
-      const boxes = Array.from({ length: 9 }, (_, idx) => {
-        const r = Math.floor(idx / 3) * 3;
-        const c = (idx % 3) * 3;
-        const values = [];
-        for (let rr = r; rr < r + 3; rr++) {
-          for (let cc = c; cc < c + 3; cc++) values.push(grid[rr][cc]);
-        }
-        return valid(values);
-      }).every(Boolean);
-      if (rows && cols && boxes) {
-        setStatus('msgSudoku', tr('sudokuCorrect'), 'success');
-        state.totalScore += 10;
-        markProgress('sudoku', 'correct');
-      } else {
-        setStatus('msgSudoku', tr('sudokuWrong'), 'error');
-        markProgress('sudoku', 'wrong');
-      }
-      updateScores();
-      saveState();
-    }
-
-    function createUltimateQuestion() {
-      const level = $('diffUltimate').value;
-      let answer = 0;
-      let q = '';
-      if (level === 'easy') {
-        const a = randomInt(8, 25); const b = randomInt(5, 20); q = `${a} + ${b}`; answer = a + b;
-      } else if (level === 'normal') {
-        const a = randomInt(15, 50); const b = randomInt(8, 22); q = `${a} × ${b}`; answer = a * b;
-      } else if (level === 'hard') {
-        const a = randomInt(30, 80); const b = randomInt(5, 20); const c = randomInt(2, 9); q = `(${a} - ${b}) × ${c}`; answer = (a - b) * c;
-      } else {
-        const a = randomInt(40, 120); const b = randomInt(12, 40); const c = randomInt(2, 9); q = `(${a} + ${b}) ÷ ${c}`; answer = Math.round((a + b) / c);
-      }
-      state.questions.ultimate = { answer };
-      $('qUltimate').textContent = `题目：${q} = ?`;
-      $('ansUltimate').value = '';
-      setStatus('msgUltimate', '', '');
-      $('showUltimateAnswer').textContent = '';
-      startTimer(40, () => {
-        setStatus('msgUltimate', tr('timeUp'), 'error');
-        markProgress('ultimate', 'wrong');
-      });
-    }
-
-    function bindDifficultySelects() {
-      const ids = ['diff24', 'diffCalc', 'diffWord', 'diffSudoku', 'diffUltimate'];
-      ids.forEach(id => {
-        const el = $(id);
-        if (!el) return;
-        el.innerHTML = [
-          '<option value="easy">Easy (+3)</option>',
-          '<option value="normal">Normal (+6)</option>',
-          '<option value="hard">Hard (+10)</option>',
-          '<option value="devil">Extreme (+18)</option>'
-        ].join('');
-        if (id === 'diffUltimate') el.value = 'devil';
-        else el.value = 'easy';
-      });
-    }
-
-    function bindEvents() {
-      document.querySelectorAll('[data-page]').forEach(btn => {
-        btn.addEventListener('click', () => showPage(btn.dataset.page));
-      });
-      document.querySelectorAll('[data-back]').forEach(btn => {
-        btn.addEventListener('click', () => showPage('homePage'));
-      });
-
-      $('langBtn').addEventListener('click', () => {
-        const menu = $('langMenu');
-        const open = menu.classList.toggle('open');
-        $('langBtn').setAttribute('aria-expanded', String(open));
-      });
-
-      document.body.addEventListener('click', (e) => {
-        if (!e.target.closest('.lang-wrap')) {
-          $('langMenu').classList.remove('open');
-          $('langBtn').setAttribute('aria-expanded', 'false');
-        }
-      });
-
-      $('submit24Btn').addEventListener('click', () => {
-        const v = Number($('ans24').value);
-        if (Number.isNaN(v)) { setStatus('msg24', tr('invalid'), 'error'); return; }
-        if (Math.abs(v - 24) < 1e-8) {
-          setStatus('msg24', tr('correct'), 'success');
-          state.totalScore += 3;
-          state.scores.page24 += 3;
-          markProgress('page24', 'correct');
-        } else {
-          setStatus('msg24', tr('wrong'), 'error');
-          markProgress('page24', 'wrong');
-        }
-        updateScores();
-        saveState();
-      });
-      $('next24Btn').addEventListener('click', create24Question);
-      $('show24Btn').addEventListener('click', () => $('show24Answer').textContent = tr('answerIs') + state.questions.page24.answer);
-
-      $('submitCalcBtn').addEventListener('click', () => {
-        const v = Number($('ansCalc').value);
-        if (Number.isNaN(v)) { setStatus('msgCalc', tr('invalid'), 'error'); return; }
-        if (Math.abs(v - state.questions.calc.answer) < 1e-6) {
-          setStatus('msgCalc', tr('correct'), 'success');
-          state.totalScore += 5;
-          state.scores.calc += 5;
-          markProgress('calc', 'correct');
-        } else {
-          setStatus('msgCalc', tr('wrong'), 'error');
-          markProgress('calc', 'wrong');
-        }
-        updateScores();
-        saveState();
-      });
-      $('nextCalcBtn').addEventListener('click', createCalcQuestion);
-      $('showCalcBtn').addEventListener('click', () => $('showCalcAnswer').textContent = tr('answerIs') + state.questions.calc.answer);
-
-      $('submitWordBtn').addEventListener('click', () => {
-        const v = Number($('ansWord').value);
-        if (Number.isNaN(v)) { setStatus('msgWord', tr('invalid'), 'error'); return; }
-        if (Math.abs(v - state.questions.word.answer) < 1e-6) {
-          setStatus('msgWord', tr('correct'), 'success');
-          state.totalScore += 6;
-          state.scores.word += 6;
-          markProgress('word', 'correct');
-        } else {
-          setStatus('msgWord', tr('wrong'), 'error');
-          markProgress('word', 'wrong');
-        }
-        updateScores();
-        saveState();
-      });
-      $('nextWordBtn').addEventListener('click', createWordQuestion);
-      $('showWordBtn').addEventListener('click', () => $('showWordAnswer').textContent = tr('answerIs') + state.questions.word.answer);
-
-      $('checkSudokuBtn').addEventListener('click', checkSudoku);
-      $('newSudokuBtn').addEventListener('click', buildSudoku);
-      $('retrySudokuBtn').addEventListener('click', () => setStatus('msgSudoku', tr('retryQueue'), 'info'));
-
-      $('submitUltimateBtn').addEventListener('click', () => {
-        const v = Number($('ansUltimate').value);
-        if (Number.isNaN(v)) { setStatus('msgUltimate', tr('invalid'), 'error'); return; }
-        if (Math.abs(v - state.questions.ultimate.answer) < 1e-6) {
-          setStatus('msgUltimate', tr('correct'), 'success');
-          state.totalScore += 18;
-          state.scores.ultimate += 18;
-          markProgress('ultimate', 'correct');
-        } else {
-          setStatus('msgUltimate', tr('wrong'), 'error');
-          markProgress('ultimate', 'wrong');
-        }
-        updateScores();
-        saveState();
-      });
-      $('nextUltimateBtn').addEventListener('click', createUltimateQuestion);
-      $('showUltimateBtn').addEventListener('click', () => $('showUltimateAnswer').textContent = tr('answerIs') + state.questions.ultimate.answer);
-
-      $('playerName').addEventListener('input', e => {
-        state.playerName = e.target.value.slice(0, 24);
-        saveState();
-      });
-      $('playerId').addEventListener('input', e => {
-        state.playerId = e.target.value.slice(0, 20);
-        saveState();
-      });
-    }
-
-    function init() {
-      loadState();
-      renderLangMenu();
-      bindDifficultySelects();
-      bindEvents();
-      $('playerName').value = state.playerName;
-      $('playerId').value = state.playerId;
-      setLanguage(state.lang);
-      renderMiniProgress('progress24', state.progress.page24);
-      renderMiniProgress('progressCalc', state.progress.calc);
-      renderMiniProgress('progressWord', state.progress.word);
-      renderMiniProgress('progressSudoku', state.progress.sudoku);
-      renderMiniProgress('progressUltimate', state.progress.ultimate);
-      create24Question();
-      createCalcQuestion();
-      createWordQuestion();
-      buildSudoku();
-      createUltimateQuestion();
-      updateScores();
-      showPage('homePage');
-    }
-
+    const state={lang:'zh',totalScore:0,scores:{game24:0,calc:0,word:0,sudoku:0,multi:0,ultimate:0},playerName:'',playerId:'',progress:{game24:[],calc:[],word:[],sudoku:[],multi:[],ultimate:[]},questions:{},timerId:null,timeLeft:40,activeMode:null,answered:{},players:[],multiRound:0,multiActive:false};
+    const $=id=>document.getElementById(id);
+    function tr(key){return T[state.lang]?.[key]||T.en[key]||key}
+    function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({lang:state.lang,totalScore:state.totalScore,scores:state.scores,playerName:state.playerName,playerId:state.playerId}))}catch(e){}}
+    function load(){try{const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'{}');if(T[d.lang])state.lang=d.lang;state.totalScore=Number(d.totalScore)||0;state.scores={...state.scores,...(d.scores||{})};state.playerName=d.playerName||'';state.playerId=d.playerId||''}catch(e){}}
+    function setStatus(id,text='',kind=''){const el=$(id);if(el){el.textContent=text;el.className='status'+(kind?' '+kind:'')}}
+    function setLanguage(lang){state.lang=lang;document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(el=>{const val=tr(el.dataset.i18n);el.textContent=val});document.querySelectorAll('[data-placeholder]').forEach(el=>el.placeholder=tr(el.dataset.placeholder));fillSelects();save()}
+    function renderLanguageMenu(){const menu=$('langMenu');menu.innerHTML='';Object.entries(LANGS).forEach(([code,name])=>{const b=document.createElement('button');b.type='button';b.className='lang-option';b.textContent=name;b.onclick=()=>{setLanguage(code);menu.classList.remove('open');$('langBtn').setAttribute('aria-expanded','false')};menu.appendChild(b)})}
+    function fillSelects(){const optionHtml=LEVELS.map(level=>`<option value="${level}">${tr(level)}</option>`).join('');['diff24','diffCalc','diffWord','diffSudoku','multiDifficulty'].forEach(id=>{const e=$(id);if(!e)return;const old=e.value;e.innerHTML=optionHtml;e.value=LEVELS.includes(old)?old:'devil'});const u=$('diffUltimate');u.innerHTML=`<option value="devil">${tr('devil')}</option>`;u.value='devil';u.disabled=true;const type=$('multiType');if(type){const old=type.value;type.innerHTML=[['game24','type24'],['calc','typeCalc'],['word','typeWord']].map(([v,k])=>`<option value="${v}">${tr(k)}</option>`).join('');type.value=['game24','calc','word'].includes(old)?old:'calc'}}
+    function updateScores(){ $('topScore').textContent=state.totalScore;$('homeScore').textContent=state.totalScore;[['score24','game24'],['scoreCalc','calc'],['scoreWord','word'],['scoreSudoku','sudoku'],['scoreUltimate','ultimate']].forEach(([id,key])=>$(id).textContent=state.scores[key]||0);$('ultimateBtn').disabled=state.totalScore<40;$('ultimateBtn').style.opacity=state.totalScore<40?'.55':'1'}
+    function renderProgress(mode){const e=$('progress'+({game24:'24',calc:'Calc',word:'Word',sudoku:'Sudoku',multi:'Multi',ultimate:'Ultimate'}[mode]));if(!e)return;e.innerHTML='';const vals=state.progress[mode].slice(-20);for(let i=0;i<20;i++){const d=document.createElement('div');d.className='dot '+(vals[i]||'empty');e.appendChild(d)}}
+    function mark(mode,result){const a=state.progress[mode];a.push(result);if(a.length>20)a.shift();renderProgress(mode)}
+    function clearTimer(){if(state.timerId)clearInterval(state.timerId);state.timerId=null;$('timerPill').classList.remove('urgent')}
+    function startTimer(mode){clearTimer();state.activeMode=mode;state.timeLeft=40;const top=$('topTimer');top.textContent='40s';state.timerId=setInterval(()=>{state.timeLeft--;top.textContent=`${Math.max(0,state.timeLeft)}s`;$('timerPill').classList.toggle('urgent',state.timeLeft<=10);if(state.timeLeft<=0){clearTimer();top.textContent=tr('timeUp');onTimeout(mode)}},1000)}
+    function onTimeout(mode){if(state.answered[mode])return;state.answered[mode]=true;mark(mode,'wrong');if(mode==='multi'){setStatus('msgMulti',tr('timeUp'),'error');advanceBotsOnTimeout()}else setStatus({game24:'msg24',calc:'msgCalc',word:'msgWord',sudoku:'msgSudoku',ultimate:'msgUltimate'}[mode],tr('timeUp'),'error')}
+    function showPage(id){clearTimer();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));if(id==='pageUltimate'&&state.totalScore<40){setStatus('msgUltimate',tr('need40'),'error');document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='homePage'));return}if(id==='page24')create24();if(id==='pageCalc')createArithmetic('calc');if(id==='pageWord')createWord('word');if(id==='pageSudoku')createSudoku();if(id==='pageUltimate')createArithmetic('ultimate');if(id==='pageMulti'&&!state.multiActive)resetMultiView()}
+    function randomInt(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+    function modeIds(mode){return {game24:['q24','ans24','msg24','show24Answer'],calc:['qCalc','ansCalc','msgCalc','showCalcAnswer'],word:['qWord','ansWord','msgWord','showWordAnswer'],ultimate:['qUltimate','ansUltimate','msgUltimate','showUltimateAnswer'] }[mode]}
+    function setQuestion(mode,text,answer,displayAnswer=answer){state.questions[mode]={answer,displayAnswer,text};const [qid,aid,mid,sid]=modeIds(mode);$(qid).textContent=text;$(aid).value='';setStatus(mid,'');$(sid).textContent='';state.answered[mode]=false;startTimer(mode)}
+    function create24(){let nums,answer;do{nums=[randomInt(1,13),randomInt(1,13),randomInt(1,13),randomInt(1,13)];answer=solve24(nums)}while(!answer);setQuestion('game24',`题目：${nums.join('  ')} → 24`,24,answer)}
+    function solve24(nums){function rec(items){if(items.length===1)return Math.abs(items[0].v-24)<1e-8?items[0].e:null;for(let i=0;i<items.length;i++)for(let j=i+1;j<items.length;j++){const a=items[i],b=items[j],rest=items.filter((_,k)=>k!==i&&k!==j);const cs=[[a.v+b.v,`(${a.e}+${b.e})`],[a.v-b.v,`(${a.e}-${b.e})`],[b.v-a.v,`(${b.e}-${a.e})`],[a.v*b.v,`(${a.e}*${b.e})`],...(b.v?[[a.v/b.v,`(${a.e}/${b.e})`]]:[]),...(a.v?[[b.v/a.v,`(${b.e}/${a.e})`]]:[])];for(const [v,e] of cs){const r=rec([...rest,{v,e}]);if(r)return r}}return null}return rec(nums.map(n=>({v:n,e:String(n)})))}
+    function arithmeticData(level){let a,b,c,q,answer;if(level==='easy'){a=randomInt(5,25);b=randomInt(3,18);q=`${a} + ${b}`;answer=a+b}else if(level==='normal'){a=randomInt(12,45);b=randomInt(3,15);q=`${a} × ${b}`;answer=a*b}else if(level==='hard'){a=randomInt(20,90);b=randomInt(5,25);c=randomInt(2,9);q=`(${a} - ${b}) × ${c}`;answer=(a-b)*c}else{a=randomInt(24,120);b=randomInt(6,30);c=randomInt(2,12);const numerator=a+b;const divisor=[2,3,4,5,6,8,10,12][randomInt(0,7)];const n=Math.ceil(numerator/divisor)*divisor;q=`(${n} + ${divisor*randomInt(1,5)}) ÷ ${divisor}`;const parts=q.match(/\d+/g).map(Number);answer=(parts[0]+parts[1])/parts[2]}return{q,answer}}
+    function createArithmetic(mode){const level=mode==='ultimate'?'devil':$('diffCalc').value;const d=arithmeticData(level);setQuestion(mode,`题目：${d.q} = ?`,d.answer)}
+    function createWord(mode){const level=$('diffWord').value;let question,answer,a,b;if(level==='easy'){a=randomInt(8,28);b=randomInt(2,15);question=`小明有 ${a} 个苹果，又买了 ${b} 个，现在一共有多少个？`;answer=a+b}else if(level==='normal'){a=randomInt(4,16);b=randomInt(3,12);question=`每盒有 ${a} 支铅笔，${b} 盒一共有多少支？`;answer=a*b}else if(level==='hard'){a=randomInt(40,120);b=randomInt(5,35);question=`商店有 ${a} 个气球，卖出 ${b} 个后剩下多少个？`;answer=a-b}else{a=randomInt(12,35);b=randomInt(3,12);const c=randomInt(5,20);question=`${a} 辆车每辆坐 ${b} 人，另外还有 ${c} 人步行到达。一共有多少人？`;answer=a*b+c}setQuestion(mode,`题目：${question}`,answer)}
+    function award(mode,level){const points={easy:3,normal:6,hard:10,devil:18}[level]||3;state.totalScore+=points;state.scores[mode]=(state.scores[mode]||0)+points;updateScores();save()}
+    function parseFormula(input){if(!/^[0-9+\-*/().\s]+$/.test(input)||!input.trim())return null;try{const value=Function(`"use strict";return (${input})`)();return Number.isFinite(value)?value:null}catch{return null}}
+    function submit(mode){if(state.answered[mode])return;const [qid,aid,mid]=modeIds(mode);const raw=$(aid).value.trim();const value=mode==='game24'?parseFormula(raw):Number(raw);if(!raw||value===null||!Number.isFinite(value)){setStatus(mid,tr(mode==='game24'?'invalidFormula':'invalid'),'error');return}if(Math.abs(value-state.questions[mode].answer)<1e-8){setStatus(mid,tr('correct'),'success');state.answered[mode]=true;clearTimer();mark(mode,'correct');const level=mode==='ultimate'?'devil':mode==='calc'?$('diffCalc').value:$('diffWord').value;award(mode,level)}else{setStatus(mid,tr('wrong'),'error');state.answered[mode]=true;clearTimer();mark(mode,'wrong')}}
+    function showAnswer(mode){const ids=modeIds(mode);$(ids[3]).textContent=tr('answerIs')+state.questions[mode].displayAnswer}
+    const SOLUTION=[[5,3,4,6,7,8,9,1,2],[6,7,2,1,9,5,3,4,8],[1,9,8,3,4,2,5,6,7],[8,5,9,7,6,1,4,2,3],[4,2,6,8,5,3,7,9,1],[7,1,3,9,2,4,8,5,6],[9,6,1,5,3,7,2,8,4],[2,8,7,4,1,9,6,3,5],[3,4,5,2,8,6,1,7,9]];
+    const PUZZLE=[[5,3,0,0,7,0,0,0,0],[6,0,0,1,9,5,0,0,0],[0,9,8,0,0,0,0,6,0],[8,0,0,0,6,0,0,0,3],[4,0,0,8,0,3,0,0,1],[7,0,0,0,2,0,0,0,6],[0,6,0,0,0,0,2,8,0],[0,0,0,4,1,9,0,0,5],[0,0,0,0,8,0,0,7,9]];
+    function createSudoku(){const board=$('sudokuBoard');board.innerHTML='';PUZZLE.forEach((row,r)=>row.forEach((num,c)=>{const input=document.createElement('input');input.className='sudoku-cell';input.maxLength=1;input.inputMode='numeric';input.setAttribute('aria-label',`Row ${r+1}, column ${c+1}`);if(num){input.value=num;input.disabled=true;input.classList.add('fixed')}else input.addEventListener('input',()=>input.value=input.value.replace(/[^1-9]/g,'').slice(0,1));board.appendChild(input)}));setStatus('msgSudoku',tr('sudokuRule'),'info');state.answered.sudoku=false;startTimer('sudoku')}
+    function checkSudoku(){if(state.answered.sudoku)return;const cells=[...document.querySelectorAll('.sudoku-cell')];if(cells.some(c=>!c.value)){setStatus('msgSudoku',tr('sudokuIncomplete'),'error');return}const valid=cells.every((cell,i)=>Number(cell.value)===SOLUTION[Math.floor(i/9)][i%9]);if(valid){setStatus('msgSudoku',tr('sudokuCorrect'),'success');state.scores.sudoku+=10;state.totalScore+=10;state.answered.sudoku=true;clearTimer();mark('sudoku','correct');updateScores();save()}else{setStatus('msgSudoku',tr('sudokuWrong'),'error');state.answered.sudoku=true;clearTimer();mark('sudoku','wrong')}}
+    function renderPlayers(){const list=$('multiPlayers');list.innerHTML='';state.players.forEach(p=>{const row=document.createElement('div');row.className='player-row';const head=document.createElement('div');head.className='player-head';const name=document.createElement('span');name.textContent=p.isUser?`${tr('you')} (${p.name})`:p.name;const score=document.createElement('span');score.textContent=`${tr('score')}: ${p.score}`;head.append(name,score);const bar=document.createElement('div');bar.className='mini-bar';const fill=document.createElement('div');fill.className='mini-fill';fill.style.width=`${Math.min(100,p.progress*10)}%`;bar.appendChild(fill);row.append(head,bar);list.appendChild(row)})}
+    function resetMultiView(){if(state.multiActive)return;state.players=[];renderPlayers();$('multiQuestion').textContent='题目：--';$('multiAns').value='';setStatus('msgMulti','');renderProgress('multi')}
+    function addBot(){if(state.players.filter(p=>!p.isUser).length>=4)return;state.players.push({name:`${tr('bot')} ${state.players.filter(p=>!p.isUser).length+1}`,score:0,progress:0,isUser:false});renderPlayers()}
+    function clearPlayers(){state.multiActive=false;clearTimer();state.players=[];state.multiRound=0;resetMultiView();$('rankBox').classList.add('hidden')}
+    function makeMultiQuestion(){const type=$('multiType').value,level=$('multiDifficulty').value;let question,answer,displayAnswer;if(type==='game24'){let nums,sol;do{nums=[randomInt(1,13),randomInt(1,13),randomInt(1,13),randomInt(1,13)];sol=solve24(nums)}while(!sol);question=`题目：${nums.join('  ')} → 24`;answer=24;displayAnswer=sol}else if(type==='word'){const a=randomInt(6,35),b=randomInt(2,12);if(level==='easy'){question=`${a} 个苹果再加 ${b} 个，一共有多少个？`;answer=a+b}else if(level==='normal'){question=`每袋有 ${a} 颗糖，${b} 袋共有多少颗？`;answer=a*b}else if(level==='hard'){question=`${a*b} 个零件平均装入 ${b} 个盒子，每盒多少个？`;answer=a}else{question=`${a} 辆车每辆乘坐 ${b} 人，另有 ${randomInt(20,90)} 人到场，共有多少人？`;const extra=randomInt(20,90);question=`${a} 辆车每辆乘坐 ${b} 人，另有 ${extra} 人到场，共有多少人？`;answer=a*b+extra}}else{const d=arithmeticData(level);question=`题目：${d.q} = ?`;answer=d.answer}return{question,answer,displayAnswer:displayAnswer||answer}}
+    function startMulti(){if(!state.players.some(p=>!p.isUser)){setStatus('msgMulti',tr('emptyBots'),'error');return}state.multiActive=true;state.multiRound=0;state.players.forEach(p=>{p.score=0;p.progress=0});$('rankBox').classList.add('hidden');nextMulti()}
+    function nextMulti(){if(!state.multiActive)return;if(state.multiRound>=10){finishMulti();return}state.multiRound++;const q=makeMultiQuestion();state.questions.multi=q;$('multiQuestion').textContent=`${tr('progressLabel')} ${state.multiRound}/10 · ${q.question}`;$('multiAns').value='';state.answered.multi=false;setStatus('msgMulti','');renderPlayers();startTimer('multi')}
+    function submitMulti(){if(!state.multiActive||state.answered.multi)return;const raw=$('multiAns').value.trim(),v=$('multiType').value==='game24'?parseFormula(raw):Number(raw);if(!raw||v===null||!Number.isFinite(v)){setStatus('msgMulti',tr('invalid'),'error');return}state.answered.multi=true;clearTimer();if(Math.abs(v-state.questions.multi.answer)<1e-8){state.players[0].score+=18;state.players[0].progress++;state.totalScore+=3;state.scores.multi+=3;setStatus('msgMulti',tr('correct'),'success');mark('multi','correct');save();updateScores()}else{setStatus('msgMulti',tr('wrong'),'error');mark('multi','wrong')}const delay=randomInt(1200,3500);setTimeout(()=>{if(!state.multiActive)return;state.players.slice(1).forEach(bot=>{bot.progress++;if(Math.random()<({easy:.4,normal:.55,hard:.68,devil:.78}[$('multiDifficulty').value]||.6))bot.score+=18});renderPlayers()},delay)}
+    function advanceBotsOnTimeout(){state.players.slice(1).forEach(bot=>{bot.progress++;if(Math.random()<.55)bot.score+=18});renderPlayers()}
+    function finishMulti(){state.multiActive=false;clearTimer();const ranked=[...state.players].sort((a,b)=>b.score-a.score);const box=$('rankBox');box.innerHTML='';const h=document.createElement('h3');h.textContent=tr('finalRank');box.appendChild(h);ranked.forEach((p,i)=>{const row=document.createElement('div');row.textContent=`${i+1}. ${p.isUser?tr('you'):p.name} — ${p.score}`;box.appendChild(row)});box.classList.remove('hidden');setStatus('msgMulti',tr('roundDone'),'success')}
+    function initLeaderboard(){const list=$('leaderboardList');list.innerHTML='';const row=document.createElement('div');row.textContent=`1. ${state.playerName||tr('you')} — ${state.totalScore}`;list.appendChild(row)}
+    function bind(){document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>{const page=b.dataset.page;if(page==='pageUltimate'&&state.totalScore<40){setStatus('msgUltimate',tr('need40'),'error');return}showPage(page)}));document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',()=>showPage('homePage')));$('langBtn').addEventListener('click',()=>{const open=$('langMenu').classList.toggle('open');$('langBtn').setAttribute('aria-expanded',String(open))});document.addEventListener('click',e=>{if(!e.target.closest('.lang-wrap')){$('langMenu').classList.remove('open');$('langBtn').setAttribute('aria-expanded','false')}});
+      $('submit24Btn').onclick=()=>submit('game24');$('next24Btn').onclick=create24;$('show24Btn').onclick=()=>showAnswer('game24');$('submitCalcBtn').onclick=()=>submit('calc');$('nextCalcBtn').onclick=()=>createArithmetic('calc');$('showCalcBtn').onclick=()=>showAnswer('calc');$('submitWordBtn').onclick=()=>submit('word');$('nextWordBtn').onclick=()=>createWord('word');$('showWordBtn').onclick=()=>showAnswer('word');$('checkSudokuBtn').onclick=checkSudoku;$('newSudokuBtn').onclick=createSudoku;$('submitUltimateBtn').onclick=()=>submit('ultimate');$('nextUltimateBtn').onclick=()=>createArithmetic('ultimate');$('showUltimateBtn').onclick=()=>showAnswer('ultimate');$('addBotBtn').onclick=addBot;$('clearPlayersBtn').onclick=clearPlayers;$('startMultiBtn').onclick=startMulti;$('submitMultiBtn').onclick=submitMulti;$('nextMultiBtn').onclick=nextMulti;
+      ['diff24','diffCalc','diffWord','diffSudoku','multiDifficulty'].forEach(id=>$(id).addEventListener('change',()=>{const mode={diff24:'page24',diffCalc:'pageCalc',diffWord:'pageWord',diffSudoku:'pageSudoku'}[id];if(mode&&state.activeMode){if(mode==='page24'&&state.page==='page24')create24();if(mode==='pageCalc'&&state.page==='pageCalc')createArithmetic('calc');if(mode==='pageWord'&&state.page==='pageWord')createWord('word');if(mode==='pageSudoku'&&state.page==='pageSudoku')createSudoku()}}));$('multiType').addEventListener('change',()=>{if(state.multiActive)nextMulti()});$('playerName').addEventListener('input',e=>{state.playerName=e.target.value.slice(0,24);save();initLeaderboard()});$('playerId').addEventListener('input',e=>{state.playerId=e.target.value.slice(0,20);save()})}
+    function init(){load();renderLanguageMenu();fillSelects();bind();$('playerName').value=state.playerName;$('playerId').value=state.playerId;setLanguage(state.lang);updateScores();initLeaderboard();['game24','calc','word','sudoku','multi','ultimate'].forEach(renderProgress);state.players=[{name:state.playerName||tr('you'),score:0,progress:0,isUser:true}];renderPlayers();$('topTimer').textContent='40s';showPage('homePage')}
     init();
   </script>
 </body>
